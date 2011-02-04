@@ -31,6 +31,7 @@ var current_type = "";
 var current_variable = "";
 var cors = true;
 var use_https = false;
+var pinned_items = "";
 
 jQuery.fn.checked = function(){
          return jQuery(this).is(':checked');
@@ -46,8 +47,7 @@ function randomNum(){
 
 
 //data getting functions
-function count_problems(repeat){
-  if (cors == true){
+function count_problems(repeat){  
       $.ajax({
             data: "count_problems=true&rand="+randomNum(),
             success: function(data){
@@ -56,38 +56,21 @@ function count_problems(repeat){
       });
       if (repeat == true){
          setTimeout("count_problems(true);",global_poll_time);
-      }
-  } else {
-    $.getJSON(build_url()+"&count_problems=true&callback=?",
-    function(data){
-         counted_problems(data);
-         if (repeat == true){
-          setTimeout("count_problems(true);",global_poll_time);
-        }
-    }); 
-   }
+      }  
 }
 
-function load_problems(){
-   if (cors == true){
+function load_problems(){   
       $.ajax({
             data: "load_problems=true&rand="+randomNum(),
             success: function(data){
                         populate_problems(data);                   
                     }
-      });
-   } else {
-    $.getJSON(build_url()+"&load_problems=true&callback=?",
-    function(data){
-        populate_problems(data);             
-    });    
-   }
+      });   
 }
 
 function browse(type,variable){  
   $.mobile.pageLoading();
-  var pagename = "browse_"+type;
-  if (cors == true){
+  var pagename = "browse_"+type;  
    $.ajax({
             data: "browse=true&type="+type+"&variable="+variable+"&rand="+randomNum(),
             success: function(data){
@@ -95,18 +78,10 @@ function browse(type,variable){
                         current_type = type;  
                         current_variable = variable;          
                     }
-      });         
-   } else {
-   $.getJSON(build_url()+"&browse=true&type="+type+"&variable="+variable+"&callback=?",
-   function(data){
-      element_builder(data);
-      current_type = type;  
-        current_variable = variable;
-   });
-   }
+      });            
 }
 
-
+//end of data getting functions
 
 function counted_problems(data){    
     last_count = problem_count;    
@@ -373,8 +348,7 @@ function jnag_init(){
     setAjax();
     if (data_url == null || data_url == ""){
         $.mobile.changePage("#config_page", "pop", false, false); 
-    } else {         
-      if (cors == true){
+    } else {               
          $.ajax({
             data: "settings=true&rand="+randomNum(),
             success: function(data){
@@ -386,13 +360,6 @@ function jnag_init(){
                alert("Unable to connect, check your settings!");               
             }
          });
-      } else {
-        $.getJSON(build_url()+"&settings=true&callback=?",
-        function(data){           
-           cmd_url = data.settings.cmd_url;
-           pnp_url = data.settings.pnp_url;
-           jNag_polling(5000);                     
-        });     
       }  
     }
 }
