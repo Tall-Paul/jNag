@@ -24,13 +24,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>jNag</title>    
         <script src="includes/anchor.js"></script>              
-         <script src="includes/jquery_mobile/jquery.js"></script>   
-        <script src="includes/phonegap.js"></script>       
+         <script src="includes/jquery_mobile/jquery.js"></script>         
     </head>
     <body>
     <script src="includes/jquery_mobile/jquery_mobile.js"></script>        
     <link rel="stylesheet" href="includes/jquery_mobile/jquery_mobile.css" />     
-    <script src="includes/jNag.js"></script> 
+    <script src="includes/jNag.js"></script>
+    <script src="includes/phonegap.js"></script> 
     <div data-role="page" id="browse_top">
         <div data-role="header" data-position="fixed">
                <h1>jNag 0.7</h1>                            
@@ -44,14 +44,8 @@
               <p><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right" data-role="button">Options</a></p>
             </div>     
         </div>
-        <!-- Not needed in phonegap version
-        <div data-role="footer" data-position="fixed">
-            <div data-role="controlgroup" data-type="horizontal">                
-                <a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a> 
-                <a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a>
-            </div>
-        </div>
-        -->
+     
+   
             
     </div> <!--main page--->
                 
@@ -65,8 +59,7 @@
             <div id="problem_list">
                 
             </div>                                                           
-        </div>   
-                         
+        </div>                      
     </div>
     
     <div data-role="dialog" id="config_page">

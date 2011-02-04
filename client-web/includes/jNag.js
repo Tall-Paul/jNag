@@ -165,9 +165,9 @@ function create_browse_page(page_name,title,display_problems){
       problems_string = '';
     }
     //with footer
-    pagestring = '<div data-role="page" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <div data-role="controlgroup" data-type="horizontal"><a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div></div></div>';
+    pagestring = '<div data-role="page" data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div></div>';
     //without footer
-    //pagestring = '<div data-role="page" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div></div>';               
+    //pagestring = '<div data-role="page"  data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div></div>';               
     $('body').append(pagestring);
     
 }
@@ -175,7 +175,7 @@ function create_browse_page(page_name,title,display_problems){
 function create_generic_dialog(page_name, title){
     $('#'+page_name).page("destroy");
     $('#'+page_name).remove();
-    pagestring =  '<div data-role="dialog" id="'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content" id="'+page_name+'_target"></div></div>';
+    pagestring =  '<div data-role="dialog" data-url="'+page_name+'" id="'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content" id="'+page_name+'_target"></div></div>';
     $('body').append(pagestring);    
 }
 
@@ -372,7 +372,7 @@ function jnag_init(){
          });
       }  
     }
-}
+
 
 function open_config(){
       $.mobile.changePage("#config_page", "pop", false, false);
@@ -406,9 +406,10 @@ function save_config(){
       storage_set("use_https","true");
    } else {
       use_https = false;
-      storage_set("use_https","true");
-   }
+      storage_set("use_https","false");
+   }      
    jnag_init();
+   $('.ui-dialog').dialog('close');
 }     
 
 $(document).ready(function(){

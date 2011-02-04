@@ -44,11 +44,9 @@
             </div>     
         </div>
      
-        <div data-role="footer" data-position="fixed">
-            <div data-role="controlgroup" data-type="horizontal">                
+        <div data-role="footer" data-position="fixed">                            
                 <a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a> 
-                <a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a>
-            </div>
+                <a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a>            
         </div>
  
             
@@ -65,7 +63,9 @@
                 
             </div>                                                           
         </div>   
-                         
+        <div data-role="footer" data-position="fixed"> 
+         <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div>
+         </div>                
     </div>
     
     <div data-role="dialog" id="config_page">

@@ -29,8 +29,8 @@ var cmd_url = "";
 var pnp_url = "";
 var current_type = "";
 var current_variable = "";
-var cors = true;
 var use_https = false;
+var pinned_items = "";
 
 jQuery.fn.checked = function(){
          return jQuery(this).is(':checked');
@@ -46,8 +46,7 @@ function randomNum(){
 
 
 //data getting functions
-function count_problems(repeat){
-  if (cors == true){
+function count_problems(repeat){  
       $.ajax({
             data: "count_problems=true&rand="+randomNum(),
             success: function(data){
@@ -56,38 +55,21 @@ function count_problems(repeat){
       });
       if (repeat == true){
          setTimeout("count_problems(true);",global_poll_time);
-      }
-  } else {
-    $.getJSON(build_url()+"&count_problems=true&callback=?",
-    function(data){
-         counted_problems(data);
-         if (repeat == true){
-          setTimeout("count_problems(true);",global_poll_time);
-        }
-    }); 
-   }
+      }  
 }
 
-function load_problems(){
-   if (cors == true){
+function load_problems(){   
       $.ajax({
             data: "load_problems=true&rand="+randomNum(),
             success: function(data){
                         populate_problems(data);                   
                     }
-      });
-   } else {
-    $.getJSON(build_url()+"&load_problems=true&callback=?",
-    function(data){
-        populate_problems(data);             
-    });    
-   }
+      });   
 }
 
 function browse(type,variable){  
   $.mobile.pageLoading();
-  var pagename = "browse_"+type;
-  if (cors == true){
+  var pagename = "browse_"+type;  
    $.ajax({
             data: "browse=true&type="+type+"&variable="+variable+"&rand="+randomNum(),
             success: function(data){
@@ -95,17 +77,20 @@ function browse(type,variable){
                         current_type = type;  
                         current_variable = variable;          
                     }
-      });         
-   } else {
-   $.getJSON(build_url()+"&browse=true&type="+type+"&variable="+variable+"&callback=?",
-   function(data){
-      element_builder(data);
-      current_type = type;  
-        current_variable = variable;
-   });
-   }
+      });            
 }
 
+//end of data getting functions
+
+//data storage functions, abstracted so we can change them easily later if required.
+
+function storage_set(key,value){
+   window.localStorage.setItem(key,value);  
+}
+
+function storage_get(key){
+     return window.localStorage.getItem(key);
+}
 
 
 function counted_problems(data){    
@@ -180,9 +165,9 @@ function create_browse_page(page_name,title,display_problems){
       problems_string = '';
     }
     //with footer
-    pagestring = '<div data-role="page" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <div data-role="controlgroup" data-type="horizontal"><a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div></div></div>';
+    //pagestring = '<div data-role="page" data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div></div>';
     //without footer
-    //pagestring = '<div data-role="page" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div></div>';               
+    pagestring = '<div data-role="page"  data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div></div>';               
     $('body').append(pagestring);
     
 }
@@ -190,7 +175,7 @@ function create_browse_page(page_name,title,display_problems){
 function create_generic_dialog(page_name, title){
     $('#'+page_name).page("destroy");
     $('#'+page_name).remove();
-    pagestring =  '<div data-role="dialog" id="'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content" id="'+page_name+'_target"></div></div>';
+    pagestring =  '<div data-role="dialog" data-url="'+page_name+'" id="'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content" id="'+page_name+'_target"></div></div>';
     $('body').append(pagestring);    
 }
 
@@ -373,8 +358,7 @@ function jnag_init(){
     setAjax();
     if (data_url == null || data_url == ""){
         $.mobile.changePage("#config_page", "pop", false, false); 
-    } else {         
-      if (cors == true){
+    } else {               
          $.ajax({
             data: "settings=true&rand="+randomNum(),
             success: function(data){
@@ -386,26 +370,19 @@ function jnag_init(){
                alert("Unable to connect, check your settings!");               
             }
          });
-      } else {
-        $.getJSON(build_url()+"&settings=true&callback=?",
-        function(data){           
-           cmd_url = data.settings.cmd_url;
-           pnp_url = data.settings.pnp_url;
-           jNag_polling(5000);                     
-        });     
       }  
     }
-}
+
 
 function open_config(){
       $.mobile.changePage("#config_page", "pop", false, false);
 }
 
 function load_config(){  
-    data_url = window.localStorage.getItem("data_url");
-    username = window.localStorage.getItem("username");
-    password = window.localStorage.getItem("password");
-    if (window.localStorage.getItem("use_https") == "true"){
+    data_url = storage_get("data_url");
+    username = storage_get("username");
+    password = storage_get("password");    
+    if (storage_get("use_https") == "true"){
           use_https = true;
     } else {
           use_https = false;
@@ -421,17 +398,18 @@ function save_config(){
    data_url = $('#data_url').val();
    username = $('#username').val();
    password = $('#password').val();   
-   window.localStorage.setItem("data_url",data_url);
-   window.localStorage.setItem("username",username);
-   window.localStorage.setItem("password",password);
+   storage_set("data_url",data_url);
+   storage_set("username",username);
+   storage_set("password",password);
    if ($('#use_https').checked()){
       use_https = true;
-      window.localStorage.setItem("use_https","true");
+      storage_set("use_https","true");
    } else {
       use_https = false;
-      window.localStorage.setItem("use_https","false");
-   }
+      storage_set("use_https","false");
+   }      
    jnag_init();
+   $('.ui-dialog').dialog('close');
 }     
 
 $(document).ready(function(){
