@@ -1,3 +1,19 @@
+jNag is a mobile, web based interface for the Nagios network monitoring system
+
+It uses the livestatus nagios plugin for its backend, and jQuery mobile for the front end.
+
+A native android app is available from the android market, which is packaged using phonegap.
+
+If anyone has access to an iPhone development environment and would be willing to package jNag as 
+an iPhone app for me, hit me up via email.
+
+Me: http://tall-paul.co.uk
+Nagios: http://www.nagios.org/
+Livestatus: http://mathias-kettner.de/checkmk_livestatus.html
+jQuery mobile: http://jquerymobile.com/
+phonegap: http://phonegap.com/  
+
+
 jNag is released under the GPLv3 license
 You should have received a copy of the licence with this distribution.
 
