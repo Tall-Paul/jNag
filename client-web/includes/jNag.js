@@ -29,7 +29,6 @@ var cmd_url = "";
 var pnp_url = "";
 var current_type = "";
 var current_variable = "";
-var cors = true;
 var use_https = false;
 var pinned_items = "";
 
@@ -82,6 +81,17 @@ function browse(type,variable){
 }
 
 //end of data getting functions
+
+//data storage functions, abstracted so we can change them easily later if required.
+
+function storage_set(key,value){
+   window.localStorage.setItem(key,value);  
+}
+
+function storage_get(key){
+     return window.localStorage.getItem(key);
+}
+
 
 function counted_problems(data){    
     last_count = problem_count;    
@@ -369,10 +379,10 @@ function open_config(){
 }
 
 function load_config(){  
-    data_url = window.localStorage.getItem("data_url");
-    username = window.localStorage.getItem("username");
-    password = window.localStorage.getItem("password");
-    if (window.localStorage.getItem("use_https") == "true"){
+    data_url = storage_get("data_url");
+    username = storage_get("username");
+    password = storage_get("password");    
+    if (storage_get("use_https") == "true"){
           use_https = true;
     } else {
           use_https = false;
@@ -388,15 +398,15 @@ function save_config(){
    data_url = $('#data_url').val();
    username = $('#username').val();
    password = $('#password').val();   
-   window.localStorage.setItem("data_url",data_url);
-   window.localStorage.setItem("username",username);
-   window.localStorage.setItem("password",password);
+   storage_set("data_url",data_url);
+   storage_set("username",username);
+   storage_set("password",password);
    if ($('#use_https').checked()){
       use_https = true;
-      window.localStorage.setItem("use_https","true");
+      storage_set("use_https","true");
    } else {
       use_https = false;
-      window.localStorage.setItem("use_https","false");
+      storage_set("use_https","true");
    }
    jnag_init();
 }     
