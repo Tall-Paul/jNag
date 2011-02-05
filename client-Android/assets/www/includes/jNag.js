@@ -30,7 +30,7 @@ var pnp_url = "";
 var current_type = "";
 var current_variable = "";
 var use_https = false;
-var pinned_items = "";
+
 
 jQuery.fn.checked = function(){
          return jQuery(this).is(':checked');
@@ -85,11 +85,23 @@ function browse(type,variable){
 //data storage functions, abstracted so we can change them easily later if required.
 
 function storage_set(key,value){
+   if (typeof(value) == "boolean"){
+      if (value == true){
+        value = "jNag_bTrue";
+      } else {
+        value = "jNag_bFalse";
+      }
+   }
    window.localStorage.setItem(key,value);  
 }
 
 function storage_get(key){
-     return window.localStorage.getItem(key);
+     var val = window.localStorage.getItem(key);
+     if (val == "jNag_bTrue")
+        return true;
+     if (val == "jNag_bFalse")
+        return false;   
+     return val;      
 }
 
 
@@ -381,12 +393,8 @@ function open_config(){
 function load_config(){  
     data_url = storage_get("data_url");
     username = storage_get("username");
-    password = storage_get("password");    
-    if (storage_get("use_https") == "true"){
-          use_https = true;
-    } else {
-          use_https = false;
-    }       
+    password = storage_get("password"); 
+    use_https = storage_get("use_https");   
     $('#data_url').val(data_url);   
     $('#username').val(username);
     $('#password').val(password);    
@@ -397,20 +405,15 @@ function load_config(){
 function save_config(){  
    data_url = $('#data_url').val();
    username = $('#username').val();
-   password = $('#password').val();   
+   password = $('#password').val(); 
+   use_https = $('#use_https').checked();  
    storage_set("data_url",data_url);
    storage_set("username",username);
    storage_set("password",password);
-   if ($('#use_https').checked()){
-      use_https = true;
-      storage_set("use_https","true");
-   } else {
-      use_https = false;
-      storage_set("use_https","false");
-   }      
+   storage_set("use_https",use_https);
    jnag_init();
    $('.ui-dialog').dialog('close');
-}     
+}       
 
 $(document).ready(function(){
     load_config();
