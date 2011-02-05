@@ -420,8 +420,7 @@ function save_config(){
    storage_set("use_https",use_https);
    storage_set("use_images",use_images); 
    
-   jnag_init();
-   $('.ui-dialog').dialog('close');
+   home();
 }     
 
 $(document).ready(function(){
