@@ -418,8 +418,7 @@ function save_config(){
    storage_set("username",username);
    storage_set("password",password);
    storage_set("use_https",use_https);
-   storage_set("use_images",use_images); 
-   
+   storage_set("use_images",use_images);    
    home();
 }     
 
