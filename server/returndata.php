@@ -78,6 +78,39 @@
        
     }
     
+     if (isset($_GET['get_pinned'])){
+        $browse_items[] = array("type"=>"list","target"=>"pin_target","id"=>"pinned_list");        
+        $pinned_items = explode(",",$_GET['get_pinned']);
+            foreach($pinned_items as $pinned_item){
+                $dat = explode("|",$pinned_item);
+                $host = $dat[0];
+                $service_name = $dat[1];
+                if ($host != "" && $service_name != ""){
+                $filter = $filter = "\nFilter: host_name = ".$host."\nFilter: display_name = ".$service_name;
+                $data = json_decode(run_query("GET services\nColumns: display_name host_name plugin_output state host_address host_comments custom_variable_names custom_variable_values host_address host_last_check host_last_time_down host_last_time_unreachable host_last_time_up $filter\nAuthUser: $username\nOutputFormat: json\n\n"));
+                if (is_array($data[0])){                
+                $service = $data[0];    
+                $image = "images/service.png";            
+                if (is_array($service[6])){
+                  foreach($service[6] as $key=>$value){                      
+                      if ($value == "JNAG_IMAGE")
+                        $image = str_replace("\$SERVER$",$images_url,$service[7][$key]);                                             
+                  }                
+                 }                                 
+                 $variable = $service[1]."|".$service[0];
+                 if ($service[3] != 0){
+                    $colour = "warn";
+                 } else {
+                    $colour = "fine";
+                 }              
+                $browse_items[] = array("heading"=>$service[0],"text"=>$service[2],"type"=>"service","variable"=>$variable,"count"=>"1-","colour"=>$colour,"target"=>"pinned_list", "image"=>$image);
+                }
+            }
+            }
+            $return_array['browse_items'] = $browse_items;
+        } 
+     
+    
     if (isset($_GET['browse'])){
         $type = $_GET['type'];                
         
@@ -252,7 +285,9 @@
                          $browse_items[] = array("text"=>$comment[1],"type"=>"nolink","target"=>"comments_list");
                      }
             }              
-            $browse_items[] = array("type"=>"browse_button","button_text"=>"Add Comment","button_type"=>"comment_service","button_variable"=>$_GET['variable'],"target"=>"service_target");                      
+            $browse_items[] = array("type"=>"browse_button","button_text"=>"Add Comment","button_type"=>"comment_service","button_variable"=>$_GET['variable'],"target"=>"service_target");
+            $browse_items[] = array("type"=>"browse_button","button_text"=>"Pin to Home","button_type"=>"pin_button","button_variable"=>$_GET['variable'],"target"=>"service_target");
+            $browse_items[] = array("type"=>"browse_button","button_text"=>"UnPin","button_type"=>"unpin_button","button_variable"=>$_GET['variable'],"target"=>"service_target");                      
             if ($pnp_enable == true){                          
               $browse_items[] = array("type"=>"text","heading"=>"last 24 hours","text"=>"","target"=>"service_target");
               $browse_items[] = array("type"=>"pnp","host"=>$host,"service"=>$service_name,"target"=>"service_target","pnp_view"=>"1");

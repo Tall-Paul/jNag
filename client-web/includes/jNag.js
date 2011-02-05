@@ -31,11 +31,37 @@ var current_type = "";
 var current_variable = "";
 var use_https = false;
 var use_images = true;
-
+var home_pinned = "";
 
 
 jQuery.fn.checked = function(){
          return jQuery(this).is(':checked');
+}
+
+
+function home_pin(host,service){
+    home_pinned = home_pinned.replace(host+"|"+service+",","");
+    home_pinned = home_pinned + host + "|" + service + ",";
+    storage_set("home_pinned",home_pinned);
+}
+
+function home_unpin(host,service){
+     home_pinned = home_pinned.replace(host+"|"+service+",","");    
+     storage_set("home_pinned",home_pinned);
+}
+
+
+function get_pinned(){
+    
+    if (home_pinned != ""){
+      $.ajax({
+            data: "get_pinned="+home_pinned+"&rand="+randomNum(),
+            success: function(data){       
+                   $('#pinned_list').remove();            
+                   element_builder(data);                                       
+            }
+      });
+    }
 }
 
 function now(){
@@ -47,8 +73,6 @@ function randomNum(){
 }
 
 
-
-
 function count_problems(repeat){  
       $.ajax({
             data: "count_problems=true&rand="+randomNum(),
@@ -56,6 +80,7 @@ function count_problems(repeat){
                         counted_problems(data);                                  
             }
       });
+      get_pinned();
       if (repeat == true){
          setTimeout("count_problems(true);",global_poll_time);
       }  
@@ -70,7 +95,23 @@ function load_problems(){
       });   
 }
 
+
+
 function browse(type,variable){  
+  //hacks for various 'non browsing' elements go here
+  
+  if (type == "pin_button"){
+     dat = variable.split("|");
+     home_pin(dat[0],dat[1]); 
+     return;
+  }
+  
+  if (type == "unpin_button"){
+     dat = variable.split("|");
+     home_unpin(dat[0],dat[1]);
+     return; 
+  }  
+  
   $.mobile.pageLoading();
   var pagename = "browse_"+type;  
    $.ajax({
@@ -85,6 +126,8 @@ function browse(type,variable){
 
 
 function storage_set(key,value){
+   if (value == null)
+      value = "";
    if (typeof(value) == "boolean"){
       if (value == true){
         value = "jNag_bTrue";
@@ -97,6 +140,8 @@ function storage_set(key,value){
 
 function storage_get(key){
      var val = window.localStorage.getItem(key);
+     if (val == null)
+        return "";
      if (val == "jNag_bTrue")
         return true;
      if (val == "jNag_bFalse")
@@ -396,6 +441,7 @@ function load_config(){
     password = storage_get("password"); 
     use_https = storage_get("use_https");           
     use_images = storage_get("use_images");
+    home_pinned = storage_get("home_pinned");
     
     $('#data_url').val(data_url);   
     $('#username').val(username);
@@ -418,7 +464,7 @@ function save_config(){
    storage_set("username",username);
    storage_set("password",password);
    storage_set("use_https",use_https);
-   storage_set("use_images",use_images);    
+   storage_set("use_images",use_images);       
    home();
 }     
 
