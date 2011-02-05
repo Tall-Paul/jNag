@@ -30,6 +30,8 @@ var pnp_url = "";
 var current_type = "";
 var current_variable = "";
 var use_https = false;
+var use_images = true;
+
 
 
 jQuery.fn.checked = function(){
@@ -45,7 +47,8 @@ function randomNum(){
 }
 
 
-//data getting functions
+
+
 function count_problems(repeat){  
       $.ajax({
             data: "count_problems=true&rand="+randomNum(),
@@ -80,9 +83,6 @@ function browse(type,variable){
       });            
 }
 
-//end of data getting functions
-
-//data storage functions, abstracted so we can change them easily later if required.
 
 function storage_set(key,value){
    if (typeof(value) == "boolean"){
@@ -275,7 +275,7 @@ function element_builder(data){
              default:
                //default is a list item, with a link to the next browse page, requires 'variable', 'count' and 'text' in data 
                browsestring = "browse('"+value.type+"','"+value.variable+"');";
-               if (value.image != "" && value.image != null)
+               if (value.image != "" && value.image != null && use_images == true)
                   imagestring = "<img class='ui-li-thumb' src='"+value.image+"' />";
                else 
                   imagestring = "";
@@ -394,11 +394,16 @@ function load_config(){
     data_url = storage_get("data_url");
     username = storage_get("username");
     password = storage_get("password"); 
-    use_https = storage_get("use_https");   
+    use_https = storage_get("use_https");           
+    use_images = storage_get("use_images");
+    
     $('#data_url').val(data_url);   
     $('#username').val(username);
     $('#password').val(password);    
     $('#use_https').attr('checked', use_https);
+    $('#use_images').attr('checked', use_images);
+    
+    
     jnag_init();
 }
 
@@ -407,13 +412,17 @@ function save_config(){
    username = $('#username').val();
    password = $('#password').val(); 
    use_https = $('#use_https').checked();  
+   use_images = $('#use_images').checked();
+   
    storage_set("data_url",data_url);
    storage_set("username",username);
    storage_set("password",password);
    storage_set("use_https",use_https);
+   storage_set("use_images",use_images); 
+   
    jnag_init();
    $('.ui-dialog').dialog('close');
-}       
+}     
 
 $(document).ready(function(){
     load_config();

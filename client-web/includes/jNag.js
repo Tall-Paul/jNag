@@ -30,6 +30,7 @@ var pnp_url = "";
 var current_type = "";
 var current_variable = "";
 var use_https = false;
+var use_images = true;
 
 
 
@@ -274,7 +275,7 @@ function element_builder(data){
              default:
                //default is a list item, with a link to the next browse page, requires 'variable', 'count' and 'text' in data 
                browsestring = "browse('"+value.type+"','"+value.variable+"');";
-               if (value.image != "" && value.image != null)
+               if (value.image != "" && value.image != null && use_images == true)
                   imagestring = "<img class='ui-li-thumb' src='"+value.image+"' />";
                else 
                   imagestring = "";
@@ -393,11 +394,16 @@ function load_config(){
     data_url = storage_get("data_url");
     username = storage_get("username");
     password = storage_get("password"); 
-    use_https = storage_get("use_https");   
+    use_https = storage_get("use_https");           
+    use_images = storage_get("use_images");
+    
     $('#data_url').val(data_url);   
     $('#username').val(username);
     $('#password').val(password);    
     $('#use_https').attr('checked', use_https);
+    $('#use_images').attr('checked', use_images);
+    
+    
     jnag_init();
 }
 
@@ -406,10 +412,14 @@ function save_config(){
    username = $('#username').val();
    password = $('#password').val(); 
    use_https = $('#use_https').checked();  
+   use_images = $('#use_images').checked();
+   
    storage_set("data_url",data_url);
    storage_set("username",username);
    storage_set("password",password);
    storage_set("use_https",use_https);
+   storage_set("use_images",use_images); 
+   
    jnag_init();
    $('.ui-dialog').dialog('close');
 }     
