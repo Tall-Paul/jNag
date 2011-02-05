@@ -441,6 +441,8 @@ function load_config(){
     password = storage_get("password"); 
     use_https = storage_get("use_https");           
     use_images = storage_get("use_images");
+    if (use_images == "")
+        use_images = true;
     home_pinned = storage_get("home_pinned");
     
     $('#data_url').val(data_url);   
