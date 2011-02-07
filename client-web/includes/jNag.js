@@ -33,19 +33,20 @@ var use_https = false;
 var use_images = true;
 var home_pinned = "";
 
-
 var admob_vars = {
-  pubid: 'a14d4fbbf29feae', // publisher id
-  bgcolor: '000000', // background color (hex)
-  text: 'FFFFFF', // font-color (hex)  
-  test: true, // test mode, set to false if non-test mode
-  manual_mode: true
-};
+        pubid: 'a14d4fbbf29feae', // publisher id
+        bgcolor: '000000', // background color (hex)
+        text: 'FFFFFF', // font-color (hex)  
+        test: true, // test mode, set to false if non-test mode
+        manual_mode: true
+      };
+
+
 
 function showAd()
 {
      //alert("show ad");
-    _admob.fetchAd(document.getElementById('ads'));
+    
 }
 
 
@@ -237,10 +238,10 @@ function create_browse_page(page_name,title,display_problems){
     } else {
       problems_string = '';
     }
-    //with footer
-    pagestring = '<div data-role="page" data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div></div>';
-    //without footer
-    //pagestring = '<div data-role="page"  data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div></div>';               
+    if (jNag_platform.footer == true)    
+      pagestring = '<div data-role="page" data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div></div>';
+    else
+      pagestring = '<div data-role="page"  data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div></div>';               
     $('body').append(pagestring);
     
 }
@@ -486,9 +487,22 @@ function save_config(){
    home();
 }     
 
-$(document).ready(function(){    
-    load_config();
-    showAd();
+$(document).ready(function(){
+    if (jNag_platform.phonegap == true){
+        $.getScript("includes/phonegap.js");        
+    }          
+    if (jNag_platform.footer == false)
+        $('.footer').html();
+    $('#jver').html(jNag_platform.version);
+    if (jNag_platform.ads == true){   
+      $('#main_footer').append("<div id='ads'></div>");               
+      $.getScript("http://mm.admob.com/static/iphone/iadmob.js",function(){
+          _admob.fetchAd(document.getElementById('ads'));
+      });      
+    }      
+    
+           
+    load_config();     
 });
 
 

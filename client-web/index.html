@@ -28,12 +28,13 @@
     </head>
     <body>
     <script src="includes/jquery_mobile/jquery_mobile.js"></script>        
-    <link rel="stylesheet" href="includes/jquery_mobile/jquery_mobile.css" />     
-    <script src="includes/jNag.js"></script> 
-    <script type="text/javascript" src="http://mm.admob.com/static/iphone/iadmob.js"></script>
+    <link rel="stylesheet" href="includes/jquery_mobile/jquery_mobile.css" /> 
+    <script src="includes/platform.js"></script>    
+    <script src="includes/jNag.js"></script>    
+    <div id="script_target"></div>     
     <div data-role="page" id="browse_top">
         <div data-role="header" data-position="fixed">
-               <h1>jNag 0.7.5 (pre)</h1>                                                                                  
+               <h1>jNag <span id="jver"></span></h1>                                                                                  
         </div>
         <div id="main_content" data-role="content">
             <ul data-role="listview" data-inset="true" data-theme="c" class="problem_list" style="display:none">   
@@ -46,9 +47,9 @@
             </div>     
             
         </div>
-        <div data-role="footer" data-position="fixed">                            
+        <div data-role="footer" data-position="fixed" class="footer" id='main_footer'>                            
                 <a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a> 
-                <a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a>
+                <a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a>                
         </div>
  
             
@@ -63,7 +64,7 @@
                 
             </div>                                                           
         </div>   
-        <div data-role="footer" data-position="fixed"> 
+        <div data-role="footer" data-position="fixed" class="footer"> 
          <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div>
          </div>                
     </div>
