@@ -33,6 +33,21 @@ var use_https = false;
 var use_images = true;
 var home_pinned = "";
 
+var admob_vars = {
+  pubid: 'a14d4fbbf29feae', // publisher id
+  bgcolor: '000000', // background color (hex)
+  text: 'FFFFFF', // font-color (hex)  
+  test: true, // test mode, set to false if non-test mode
+  manual_mode: true
+};
+
+function showAd()
+{
+     //alert("show ad");
+    _admob.fetchAd(document.getElementById('ads'));
+}
+
+
 
 jQuery.fn.checked = function(){
          return jQuery(this).is(':checked');
@@ -450,8 +465,6 @@ function load_config(){
     $('#password').val(password);    
     $('#use_https').attr('checked', use_https);
     $('#use_images').attr('checked', use_images);
-    
-    
     jnag_init();
 }
 
@@ -471,7 +484,9 @@ function save_config(){
 }     
 
 $(document).ready(function(){
+    //showAd();
     load_config();
+    showAd();
 });
 
 
