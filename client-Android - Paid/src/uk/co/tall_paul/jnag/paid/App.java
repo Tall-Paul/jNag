@@ -1,4 +1,4 @@
-package uk.co.tall_paul.jnag;
+package uk.co.tall_paul.jnag.paid;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -6,7 +6,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.phonegap.*;
-import uk.co.tall_paul.jnag.R;
+import uk.co.tall_paul.jnag.paid.R;
 
 public class App extends DroidGap {
     /** Called when the activity is first created. */

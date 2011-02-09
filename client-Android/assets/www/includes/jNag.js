@@ -37,15 +37,17 @@ var admob_vars = {
         pubid: 'a14d4fbbf29feae', // publisher id
         bgcolor: '000000', // background color (hex)
         text: 'FFFFFF', // font-color (hex)  
-        test: true, // test mode, set to false if non-test mode
+        test: false, // test mode, set to false if non-test mode
         manual_mode: true
       };
 
 
 
-function showAd()
+function showAd(element)
 {
-     //alert("show ad");
+	$.getScript("http://mm.admob.com/static/iphone/iadmob.js",function(){
+        _admob.fetchAd(document.getElementById(element));
+    });
     
 }
 
@@ -239,10 +241,13 @@ function create_browse_page(page_name,title,display_problems){
       problems_string = '';
     }
     if (jNag_platform.footer == true)    
-      pagestring = '<div data-role="page" data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div></div>';
+      pagestring = '<div data-role="page" data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div><div id="'+page_name+'_dynamic_ads"></div></div>';
     else
-      pagestring = '<div data-role="page"  data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div></div>';               
+      pagestring = '<div data-role="page"  data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"><div id="'+page_name+'_dynamic_ads"></div></div></div>';               
     $('body').append(pagestring);
+    if (jNag_platform.ads == true){
+    	showAd(page_name+"_dynamic_ads");
+    }
     
 }
 
@@ -362,6 +367,7 @@ function element_builder(data){
                 $('#'+value.id).page();
                 count_problems(false);                
                 $.mobile.changePage("#"+value.id,"slide",false,true);
+                
           }
       });
        //remove any broken graph images
@@ -492,13 +498,12 @@ $(document).ready(function(){
         $.getScript("includes/phonegap.js");        
     }          
     if (jNag_platform.footer == false)
-        $('.footer').html();
+        $('.footer').html("");
     $('#jver').html(jNag_platform.version);
     if (jNag_platform.ads == true){   
-      $('#main_footer').append("<div id='ads'></div>");               
-      $.getScript("http://mm.admob.com/static/iphone/iadmob.js",function(){
-          _admob.fetchAd(document.getElementById('ads'));
-      });      
+      $('#main_footer').append("<div id='main_ads'></div>");      
+      showAd("main_ads");      
+      showAd("problem_ads");
     }      
     
            

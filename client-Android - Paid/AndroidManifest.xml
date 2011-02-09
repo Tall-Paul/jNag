@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="uk.co.tall_paul.jnag"
-      android:versionCode="075" android:versionName="0.75">
+      android:versionCode="075" android:versionName="0.75" package="uk.co.tall_paul.jnag.paid">
       <supports-screens
 android:largeScreens="true"
 android:normalScreens="true"
