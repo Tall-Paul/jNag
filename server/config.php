@@ -40,7 +40,7 @@ $data_address = "unix:///usr/local/nagios/var/rw/live";
 
 /* #########DON'T CHANGE ANYTHING BELOW THIS LINE############# */
 global $json,$cmd_url,$version,$poll_time,$page,$version_info, $pnp_url,$pnp_enable,$images_url;
-if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'off'   ){
+if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'   ){
   $server_root =  "http://$username:$password@".$_SERVER['HTTP_HOST'];
 } else {
    $server_root =  "https://$username:$password@".$_SERVER['HTTP_HOST'];

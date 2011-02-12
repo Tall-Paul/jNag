@@ -212,6 +212,7 @@ function populate_problems(data){
 
 function cmd(form_id){
     $.post(cmd_url, $("#"+form_id).serialize());
+    $("#"+form_id).parent().dialog('close');
 }
 
 function home(){

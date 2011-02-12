@@ -314,8 +314,8 @@
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"service","val"=>$service_name,"target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","value"=>"");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","value"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>"");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
         
@@ -327,8 +327,8 @@
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"33","target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");            
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","value"=>"");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","value"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>"");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
         
@@ -339,8 +339,8 @@
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"1","target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");            
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","value"=>"");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","value"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>"");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
         
@@ -354,8 +354,8 @@
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");            
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host,"target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"service","val"=>$service,"target"=>"acknowledge_form");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","value"=>"");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","value"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>"");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
                 
