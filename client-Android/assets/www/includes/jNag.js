@@ -29,7 +29,6 @@ var cmd_url = "";
 var pnp_url = "";
 var current_type = "";
 var current_variable = "";
-var use_https = false;
 var use_images = true;
 var home_pinned = "";
 
@@ -118,7 +117,6 @@ function load_problems(){
 
 function browse(type,variable){  
   //hacks for various 'non browsing' elements go here
-  
   if (type == "pin_button"){
      dat = variable.split("|");
      home_pin(dat[0],dat[1]); 
@@ -412,21 +410,10 @@ function getUrlVars()
     return vars;
 }
 
-function build_url(){
-    if (use_https == true)
-      return "https://"+username+":"+password+"@"+data_url+"?a=1";
-    else
-      return "http://"+username+":"+password+"@"+data_url+"?a=1";    
-}
 
 function setAjax(){
-   if (use_https == true){
-      transport = "https://";
-   } else {
-      transport = "http://";
-   }
    $.ajaxSetup({
-         url: transport+data_url,
+         url: data_url,
          username: username,
          password: password,
          type: "GET",
@@ -460,19 +447,26 @@ function open_config(){
 }
 
 function load_config(){  
-    data_url = storage_get("data_url");
+    data_url = storage_get("data_url");    
     username = storage_get("username");
-    password = storage_get("password"); 
-    use_https = storage_get("use_https");           
+    password = storage_get("password");                
     use_images = storage_get("use_images");
+    //legacy url support
+    if (data_url.indexOf("http") == -1)
+    {
+       if (storage_get("use_https") == true){
+          data_url = "https://" + data_url;
+       } else {
+          data_url = "http://" + data_url;
+       }
+    }
     if (use_images == "")
         use_images = true;
-    home_pinned = storage_get("home_pinned");
-    
+    home_pinned = storage_get("home_pinned");    
     $('#data_url').val(data_url);   
     $('#username').val(username);
     $('#password').val(password);    
-    $('#use_https').attr('checked', use_https);
+    //$('#use_https').attr('checked', use_https);
     $('#use_images').attr('checked', use_images);
     
     
@@ -483,9 +477,8 @@ function save_config(){
    data_url = $('#data_url').val();
    username = $('#username').val();
    password = $('#password').val(); 
-   use_https = $('#use_https').checked();  
-   use_images = $('#use_images').checked();
-   
+   //use_https = $('#use_https').checked();  
+   use_images = $('#use_images').checked();   
    storage_set("data_url",data_url);
    storage_set("username",username);
    storage_set("password",password);
@@ -505,8 +498,7 @@ $(document).ready(function(){
       $('#main_footer').append("<div id='main_ads'></div>");      
       showAd("main_ads");      
       showAd("problem_ads");
-    }      
-    
+    }          
            
     load_config();     
 });
