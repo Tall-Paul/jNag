@@ -1,10 +1,49 @@
 <?    
-    global $json, $cgi_bin, $data_address, $username, $pnp_url;
-    
-    if (!isset($data_address))
-        include("config.php");
-        
-    
+/*
+################################################################################
+###################    SETTINGS  ###############################################
+################################################################################
+*/
+ 
+//URLS relative to your server webroot
+$cgi_bin = "/nagios/cgi-bin";
+$jNag_root = "/nagios/jNag";
+$images = "/nagios/jNag/server/images";
+
+//use pnp graphs in service view if available
+$pnp_enable = true;
+$pnp_url = "/nagios/pnp/index.php";
+
+//path to your livestatus socket
+$data_address = "unix:///usr/local/nagios/var/rw/live";
+
+//Use AuthUsername in livestatus requests?
+$authuser = false;
+
+/*
+################################################################################
+END OF SETTINGS
+DON'T CHANGE ANYTHING BELOW THIS LINE!!
+################################################################################
+*/
+
+
+  $username = $_SERVER['PHP_AUTH_USER']; //change this if you want to get status info for a user other than the one you're logged into nagios with
+  $password = $_SERVER['PHP_AUTH_PW'];
+  if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'   ){
+    $server_root =  "http://$username:$password@".$_SERVER['HTTP_HOST'];
+  } else {
+     $server_root =  "https://$username:$password@".$_SERVER['HTTP_HOST'];
+  }
+  $cgi_bin = $server_root.$cgi_bin;
+  $jNag_root = $server_root.$jNag_root;
+  $pnp_url = $server_root.$pnp_url;
+  $images_url = $server_root.$images;
+  $cmd_url = "$cgi_bin/cmd.cgi";
+  if ($authuser == true)
+      $authuser = "\nAuthUser: $username";
+  else
+      $authuser = "";
     // PREVENT CACHING FIRST BEFORE ANYTHING ELSE!
     header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
     header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // alwaysmodified
@@ -87,7 +126,7 @@
                 $service_name = $dat[1];
                 if ($host != "" && $service_name != ""){
                 $filter = $filter = "\nFilter: host_name = ".$host."\nFilter: display_name = ".$service_name;
-                $data = json_decode(run_query("GET services\nColumns: display_name host_name plugin_output state host_address host_comments custom_variable_names custom_variable_values host_address host_last_check host_last_time_down host_last_time_unreachable host_last_time_up $filter\nAuthUser: $username\nOutputFormat: json\n\n"));
+                $data = json_decode(run_query("GET services\nColumns: display_name host_name plugin_output state host_address host_comments custom_variable_names custom_variable_values host_address host_last_check host_last_time_down host_last_time_unreachable host_last_time_up $filter $authuser\nOutputFormat: json\n\n"));
                 if (is_array($data[0])){                
                 $service = $data[0];    
                 $image = "images/service.png";            
@@ -117,11 +156,11 @@
         if ($type == "top"){
            $browse_items[] = array("type"=>"clear","target"=>"top_target");
            $browse_items[] = array("type"=>"list","target"=>"top_target","id"=>"top_list");        
-           $count = count(json_decode(run_query("GET hostgroups \nColumns: name\nAuthUser: $username\nOutputFormat: json\n\n")));           
+           $count = count(json_decode(run_query("GET hostgroups \nColumns: name $authuser\nOutputFormat: json\n\n")));           
            if ($count > 0){           
               $browse_items[] = array("heading"=>"HostGroups","text"=>"","type"=>"hostgroups","variable"=>"","count"=>$count,"target"=>"top_list", "image"=>"images/hostgroup.png");
            }
-           $hosts = json_decode(run_query("GET hosts \nColumns: name state current_attempt hard_state\nAuthUser: $username\nOutputFormat: json\n\n"));
+           $hosts = json_decode(run_query("GET hosts \nColumns: name state current_attempt hard_state$authuser\nOutputFormat: json\n\n"));
            $count = 0;
            $problems = 0;
            foreach ($hosts as $host){
@@ -137,7 +176,7 @@
            if ($count > 0){           
               $browse_items[] = array("heading"=>"ServiceGroups","text"=>"","type"=>"servicegroups","variable"=>"","count"=>$count,"target"=>"top_list", "image"=>"images/servicegroup.png");
            }           
-           $services = json_decode(run_query("GET services \nColumns: display_name state\nFilter: display_name !~ Generic Event\nAuthUser: $username\nOutputFormat: json\n\n"));
+           $services = json_decode(run_query("GET services \nColumns: display_name state\nFilter: display_name !~ Generic Event$authuser\nOutputFormat: json\n\n"));
            $count = 0;
            $problems = 0;
            foreach ($services as $service){
@@ -155,7 +194,7 @@
         if ($type == "hostgroups"){
             $browse_items[] = array("type"=>"create_page","id"=>"hostgroups","title"=>"hostgroups","show_problems"=>true);            
             $browse_items[] = array("type"=>"list","target"=>"hostgroups_target","id"=>"hostgroups_list");
-            $data = json_decode(run_query("GET hostgroups \nColumns: name num_hosts num_hosts_down num_hosts_unreach\nAuthUser: $username\nOutputFormat: json\n\n"));
+            $data = json_decode(run_query("GET hostgroups \nColumns: name num_hosts num_hosts_down num_hosts_unreach$authuser\nOutputFormat: json\n\n"));
             foreach($data as $hostgroup){
                 $problems = $hostgroup[2] + $hostgroup[3];
                 $browse_items[] = array("heading"=>$hostgroup[0],"text"=>$problems." Host Problems","type"=>"hosts","variable"=>$hostgroup[0],"count"=>$hostgroup[1],"target"=>"hostgroups_list","image"=>"images/hostgroup.png");
@@ -169,7 +208,7 @@
             } else {
                   $filter = "";
             }            
-            $data = json_decode(run_query("GET hosts \nColumns: name num_services current_attempt hard_state custom_variable_names custom_variable_values plugin_output $filter\nAuthUser: $username\nOutputFormat: json\n\n"));
+            $data = json_decode(run_query("GET hosts \nColumns: name num_services current_attempt hard_state custom_variable_names custom_variable_values plugin_output $filter$authuser\nOutputFormat: json\n\n"));
             foreach ($data as $host){
                 if ($host[2] != 1 || $host[3] != 0){
                     $colour = "warn";
@@ -190,7 +229,7 @@
         if ($type == "servicegroups"){
             $browse_items[] = array("type"=>"create_page","id"=>"servicegroups","title"=>"ServiceGroups","show_problems"=>true);            
             $browse_items[] = array("type"=>"list","target"=>"servicegroups_target","id"=>"servicegroups_list");
-            $data = json_decode(run_query("GET servicegroups \nColumns: name num_services num_services_ok\nAuthUser: $username\nOutputFormat: json\n\n"));            
+            $data = json_decode(run_query("GET servicegroups \nColumns: name num_services num_services_ok$authuser\nOutputFormat: json\n\n"));            
             foreach($data as $servicegroup){
                 $problems = $servicegroup[2] - $servicegroup[1];
                 $browse_items[] = array("heading"=>$servicegroup[0],"text"=>$problems." Service problems","type"=>"services","variable"=>"groups|".$servicegroup[0],"count"=>$servicegroup[1],"target"=>"servicegroups_list", "image"=>"images/servicegroup.png");
@@ -213,7 +252,7 @@
               } else {
                 $filter = "";
               }                   
-              $data = json_decode(run_query("GET services\nColumns: display_name host_name plugin_output state host_address host_comments custom_variable_names custom_variable_values host_address host_last_check host_last_time_down host_last_time_unreachable host_last_time_up $filter\nAuthUser: $username\nOutputFormat: json\n\n"));
+              $data = json_decode(run_query("GET services\nColumns: display_name host_name plugin_output state host_address host_comments custom_variable_names custom_variable_values host_address host_last_check host_last_time_down host_last_time_unreachable host_last_time_up $filter$authuser\nOutputFormat: json\n\n"));
               
               
               if ($filter_type == "host"){     
@@ -268,7 +307,7 @@
             $arr = explode("|",$_GET['variable']);
             $host = $arr[0];
             $service_name = $arr[1];            
-            $data = json_decode(run_query("GET services\nColumns: host_name display_name host_address acknowledged comments last_check last_time_ok last_time_unknown last_time_warning last_time_critical plugin_output\nFilter: host_name = $host\nFilter: display_name = $service_name\nAuthUser: $username\nOutputFormat: json\n\n"));
+            $data = json_decode(run_query("GET services\nColumns: host_name display_name host_address acknowledged comments last_check last_time_ok last_time_unknown last_time_warning last_time_critical plugin_output\nFilter: host_name = $host\nFilter: display_name = $service_name $authuser\nOutputFormat: json\n\n"));
             
             $last_check = format_time($data[0][5]);
             $last_ok = format_time($data[0][6]);
@@ -278,7 +317,7 @@
             //this could do with chaging to 4 seperate lines, rather than one table
             $browse_items[] = array("type"=>"text","heading"=>$service_name." on ".$host,"text"=>"<table><tr><td>Output: </td><td>".$data[0][10]."</td></tr><tr><td>Last Checked: </td><td>$last_check</td></tr><tr><td>Last OK: </td><td> $last_ok</td></tr><tr><td>Last Warning: </td><td>$last_warning</td></tr><tr><td>Last Critical: </td><td>$last_critical</td></tr></table>","target"=>"service_target");
             if (is_array($data[0][4])){                                         
-                     $comments = json_decode(run_query("GET comments\nColumns: author comment entry_time\nFilter: host_name = $host\nFilter: service_display_name = $service_name\nOutputFormat: json\n\n"));
+                     $comments = json_decode(run_query("GET comments\nColumns: author comment entry_time\nFilter: host_name = $host\nFilter: service_display_name = $service_name $authuser \nOutputFormat: json\n\n"));
                      $browse_items[] = array("type"=>"list","target"=>"service_target","id"=>"comments_list");
                      $browse_items[] = array("text"=>"Comments","type"=>"header","target"=>"comments_list");
                      foreach($comments as $comment){
@@ -364,10 +403,10 @@
     
     if (isset($_GET['count_problems'])){
         $count = 0;
-        $dat = run_query("GET hosts \nColumns: name \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 \nAuthUser: $username\nOutputFormat: json\n\n");         
+        $dat = run_query("GET hosts \nColumns: name \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 $authuser\nOutputFormat: json\n\n");         
          $count += count(json_decode($dat));
          
-         $dat = run_query("GET services \nColumns: display_name \nFilter: acknowledged = 0 \nFilter: state != 0\nAuthUser: $username\nOutputFormat: json\n\n");         
+         $dat = run_query("GET services \nColumns: display_name \nFilter: acknowledged = 0 \nFilter: state != 0$authuser\nOutputFormat: json\n\n");         
          
          $count += count(json_decode($dat));  
          
@@ -377,7 +416,7 @@
     
     if (isset($_GET['load_problems'])){
          $problems = "";
-         $dat = run_query("GET hosts \nColumns: name plugin_output \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 \nAuthUser: $username\nOutputFormat: json\n\n");
+         $dat = run_query("GET hosts \nColumns: name plugin_output \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 $authuser\nOutputFormat: json\n\n");
          $data = json_decode($dat);         
          foreach($data as $this_host){
             $name = $this_host[0];
@@ -385,7 +424,7 @@
             $problems[] = array("host"=>$name,"service"=>"_host","type"=>"host","plugin_output"=>$output);
          }
          
-         $dat =  run_query("GET services \nColumns: host_name display_name plugin_output \nFilter: acknowledged = 0 \nFilter: state != 0\nAuthUser: $username\nOutputFormat: json\n\n");
+         $dat =  run_query("GET services \nColumns: host_name display_name plugin_output \nFilter: acknowledged = 0 \nFilter: state != 0$authuser\nOutputFormat: json\n\n");
           
           $data =  json_decode($dat);
           foreach($data as $this_host){
