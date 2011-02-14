@@ -18,7 +18,7 @@ $pnp_url = "/nagios/pnp/index.php";
 $data_address = "unix:///usr/local/nagios/var/rw/live";
 
 //Use AuthUsername in livestatus requests?
-$authuser = false;
+$authuser = true;
 
 /*
 ################################################################################
