@@ -350,7 +350,7 @@ DON'T CHANGE ANYTHING BELOW THIS LINE!!
             $data = explode("|",$_GET['variable']);
             $host_name = $data[1];
             $service_name = $data[3];                        
-            $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Acknowledge");
+            $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Re-Check");
             $browse_items[] = array("type"=>"form","id"=>"acknowledge_form","target"=>"acknowledge_dialog_target");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"7","target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");
@@ -364,7 +364,7 @@ DON'T CHANGE ANYTHING BELOW THIS LINE!!
         if ($type == "recheck_host"){
             $data = explode("|",$_GET['variable']);
             $host_name = $data[1];                                    
-            $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Acknowledge");
+            $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Re-Check");
             $browse_items[] = array("type"=>"form","id"=>"acknowledge_form","target"=>"acknowledge_dialog_target");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"96","target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");
