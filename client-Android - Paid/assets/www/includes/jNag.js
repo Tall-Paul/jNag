@@ -193,10 +193,10 @@ function populate_problems(data){
              } else {            
                 if (value.type == "host"){
                    output = value.host+" Problem "+value.plugin_output;
-                    browse_string = "browse('acknowledge_host','host|"+value.host+"');";
+                    browse_string = "browse('services','host|"+value.host+"');";
                   } else {
                     output = value.service+" on "+value.host+" "+value.plugin_output;
-                    browse_string = "browse('acknowledge_service','host|"+value.host+"|service|"+value.service+"');";
+                    browse_string = "browse('service','host|"+value.host+"|service|"+value.service+"');";
                 }
                                
                 out += '<a data-icon="alert" data-iconpos="right" href="#" data-role="button" data-theme="e" class="ajax" onClick="'+browse_string+'" >'+output+'</a>';
@@ -210,7 +210,7 @@ function populate_problems(data){
 
 function cmd(form_id){
     $.post(cmd_url, $("#"+form_id).serialize());
-    $("#"+form_id).parent().dialog('close');
+    $(".ui-dialog").dialog('close');
 }
 
 function home(){
@@ -424,7 +424,7 @@ function setAjax(){
 
 function jnag_init(){
     setAjax();
-    if (data_url == null || data_url == ""){
+    if (data_url == null || data_url == "" || data_url == "http://" || data_url == "https://"){
         $.mobile.changePage("#config_page", "pop", false, false); 
     } else {               
          $.ajax({

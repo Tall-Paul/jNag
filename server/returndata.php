@@ -270,7 +270,8 @@ DON'T CHANGE ANYTHING BELOW THIS LINE!!
                          $browse_items[] = array("text"=>$comment[1],"type"=>"nolink","target"=>"comments_list");
                      }                     
                   }   
-                  $browse_items[] = array("type"=>"browse_button","button_text"=>"Add Comment","button_type"=>"comment_host","button_variable"=>$filter_var,"target"=>"services_target");               
+                  $browse_items[] = array("type"=>"browse_button","button_text"=>"Add Comment","button_type"=>"comment_host","button_variable"=>$filter_var,"target"=>"services_target");
+                  $browse_items[] = array("type"=>"browse_button","button_text"=>"Re-check","button_type"=>"recheck_host","button_variable"=>$filter_var,"target"=>"services_target");               
                   $header_text = "Services on "; 
               } else {
                   $header_text = "";
@@ -325,6 +326,8 @@ DON'T CHANGE ANYTHING BELOW THIS LINE!!
                      }
             }              
             $browse_items[] = array("type"=>"browse_button","button_text"=>"Add Comment","button_type"=>"comment_service","button_variable"=>$_GET['variable'],"target"=>"service_target");
+            $browse_items[] = array("type"=>"browse_button","button_text"=>"Acknowledge","button_type"=>"acknowledge_service","button_variable"=>$_GET['variable'],"target"=>"service_target");
+            $browse_items[] = array("type"=>"browse_button","button_text"=>"Re-check","button_type"=>"recheck_service","button_variable"=>$_GET['variable'],"target"=>"service_target");
             $browse_items[] = array("type"=>"browse_button","button_text"=>"Pin to Home","button_type"=>"pin_button","button_variable"=>$_GET['variable'],"target"=>"service_target");
             $browse_items[] = array("type"=>"browse_button","button_text"=>"UnPin","button_type"=>"unpin_button","button_variable"=>$_GET['variable'],"target"=>"service_target");                      
             if ($pnp_enable == true){                          
@@ -341,6 +344,34 @@ DON'T CHANGE ANYTHING BELOW THIS LINE!!
               $browse_items[] = array("type"=>"pnp","host"=>$host,"service"=>$service_name,"target"=>"service_target","pnp_view"=>"4");
             }                                  
             //$browse_items[] = array("type"=>"text","heading"=>"Last Check","text"=>$service[3]);            
+        }
+        
+        if ($type == "recheck_service"){
+            $data = explode("|",$_GET['variable']);
+            $host_name = $data[1];
+            $service_name = $data[3];                        
+            $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Acknowledge");
+            $browse_items[] = array("type"=>"form","id"=>"acknowledge_form","target"=>"acknowledge_dialog_target");
+            $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"7","target"=>"acknowledge_form");
+            $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");
+            $browse_items[] = array("type"=>"input_hidden","id"=>"service","val"=>$service_name,"target"=>"acknowledge_form");
+            $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
+            $start_time = date("m-d-Y H:i:s");
+            $browse_items[] = array("type"=>"input_text","id"=>"start_time","text"=>"Time","target"=>"acknowledge_form","val"=>"$start_time");            
+            $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form");
+        }
+        
+        if ($type == "recheck_host"){
+            $data = explode("|",$_GET['variable']);
+            $host_name = $data[1];                                    
+            $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Acknowledge");
+            $browse_items[] = array("type"=>"form","id"=>"acknowledge_form","target"=>"acknowledge_dialog_target");
+            $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"96","target"=>"acknowledge_form");
+            $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");
+            $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
+            $start_time = date("m-d-Y H:i:s");
+            $browse_items[] = array("type"=>"input_text","id"=>"start_time","text"=>"Time","target"=>"acknowledge_form","val"=>"$start_time");            
+            $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form");
         }
         
         if ($type == "acknowledge_service"){
