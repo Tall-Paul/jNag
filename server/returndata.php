@@ -1,4 +1,4 @@
-<?    
+<?PHP    
 /*
 ################################################################################
 ###################    SETTINGS  ###############################################
@@ -482,9 +482,7 @@ DON'T CHANGE ANYTHING BELOW THIS LINE!!
          }
     
     }
-    
-   
-      
+
     if (isset($_GET['callback'])){    
       echo $_GET['callback']."(".json_encode($return_array).")";
     } else {
