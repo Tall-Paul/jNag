@@ -196,7 +196,7 @@ function populate_problems(data){
                     browse_string = "browse('services','host|"+value.host+"');";
                   } else {
                     output = value.service+" on "+value.host+" "+value.plugin_output;
-                    browse_string = "browse('service','host|"+value.host+"|service|"+value.service+"');";
+                    browse_string = "browse('service','"+value.host+"|"+value.service+"');";
                 }
                                
                 out += '<a data-icon="alert" data-iconpos="right" href="#" data-role="button" data-theme="e" class="ajax" onClick="'+browse_string+'" >'+output+'</a>';
