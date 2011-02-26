@@ -316,7 +316,7 @@ DON'T CHANGE ANYTHING BELOW THIS LINE!!
             $last_critical = format_time($data[0][9]);                        
             
             //this could do with chaging to 4 seperate lines, rather than one table
-            $browse_items[] = array("type"=>"text","heading"=>$service_name." on ".$host,"text"=>"<table><tr><td>Output: </td><td>".$data[0][10]."</td></tr><tr><td>Last Checked: </td><td>$last_check</td></tr><tr><td>Last OK: </td><td> $last_ok</td></tr><tr><td>Last Warning: </td><td>$last_warning</td></tr><tr><td>Last Critical: </td><td>$last_critical</td></tr></table>","target"=>"service_target");
+            $browse_items[] = array("type"=>"text","heading"=>$service_name." on ".$host,"text"=>"<table><tr><tr><td>Host Address: </td><td>".$data[0][2]."</td></tr><td>Output: </td><td>".$data[0][10]."</td></tr><tr><td>Last Checked: </td><td>$last_check</td></tr><tr><td>Last OK: </td><td> $last_ok</td></tr><tr><td>Last Warning: </td><td>$last_warning</td></tr><tr><td>Last Critical: </td><td>$last_critical</td></tr></table>","target"=>"service_target");
             if (is_array($data[0][4])){                                         
                      $comments = json_decode(run_query("GET comments\nColumns: author comment entry_time\nFilter: host_name = $host\nFilter: service_display_name = $service_name $authuser \nOutputFormat: json\n\n"));
                      $browse_items[] = array("type"=>"list","target"=>"service_target","id"=>"comments_list");
