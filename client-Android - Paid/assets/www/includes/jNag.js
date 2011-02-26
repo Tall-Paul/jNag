@@ -193,10 +193,10 @@ function populate_problems(data){
              } else {            
                 if (value.type == "host"){
                    output = value.host+" Problem "+value.plugin_output;
-                    browse_string = "browse('acknowledge_host','host|"+value.host+"');";
+                    browse_string = "browse('services','host|"+value.host+"');";
                   } else {
                     output = value.service+" on "+value.host+" "+value.plugin_output;
-                    browse_string = "browse('acknowledge_service','host|"+value.host+"|service|"+value.service+"');";
+                    browse_string = "browse('service','host|"+value.host+"|service|"+value.service+"');";
                 }
                                
                 out += '<a data-icon="alert" data-iconpos="right" href="#" data-role="button" data-theme="e" class="ajax" onClick="'+browse_string+'" >'+output+'</a>';
@@ -210,7 +210,7 @@ function populate_problems(data){
 
 function cmd(form_id){
     $.post(cmd_url, $("#"+form_id).serialize());
-    $("#"+form_id).parent().dialog('close');
+    $(".ui-dialog").dialog('close');
 }
 
 function home(){
@@ -424,7 +424,7 @@ function setAjax(){
 
 function jnag_init(){
     setAjax();
-    if (data_url == null || data_url == ""){
+    if (data_url == null || data_url == "" || data_url == "http://" || data_url == "https://"){
         $.mobile.changePage("#config_page", "pop", false, false); 
     } else {               
          $.ajax({
@@ -434,8 +434,10 @@ function jnag_init(){
                         pnp_url = data.settings.pnp_url;
                         jNag_polling(5000);          
             },
-            error: function(){                
-               alert("Unable to connect, check your settings!");               
+            error: function(x,s,e){                
+                if (e != ""){
+                  alert("Error: ["+e+"] url: [" + data_url + "]");
+                }              
             }
          });
       }  
@@ -450,8 +452,7 @@ function load_config(){
     data_url = storage_get("data_url");    
     username = storage_get("username");
     password = storage_get("password");                
-    use_images = storage_get("use_images");
-    //legacy url support
+    use_images = storage_get("use_images");    
     if (data_url.indexOf("http") == -1)
     {
        if (storage_get("use_https") == true){
@@ -465,25 +466,21 @@ function load_config(){
     home_pinned = storage_get("home_pinned");    
     $('#data_url').val(data_url);   
     $('#username').val(username);
-    $('#password').val(password);    
-    //$('#use_https').attr('checked', use_https);
+    $('#password').val(password);        
     $('#use_images').attr('checked', use_images);
-    
-    
     jnag_init();
 }
 
 function save_config(){  
    data_url = $('#data_url').val();
    username = $('#username').val();
-   password = $('#password').val(); 
-   //use_https = $('#use_https').checked();  
+   password = $('#password').val();      
    use_images = $('#use_images').checked();   
    storage_set("data_url",data_url);
    storage_set("username",username);
-   storage_set("password",password);
-   storage_set("use_https",use_https);
-   storage_set("use_images",use_images);       
+   storage_set("password",password);   
+   storage_set("use_images",use_images);
+   jnag_init();       
    home();
 }     
 
