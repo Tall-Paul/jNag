@@ -1,29 +1,24 @@
 <?PHP    
 /*
 ################################################################################
-###################    SETTINGS  ###############################################
+###################   LOAD SETTINGS  ###########################################
 ################################################################################
 */
- 
-//URLS relative to your server webroot
-$cgi_bin = "/nagios/cgi-bin";
-$jNag_root = "/nagios/jNag";
-$images = "/nagios/jNag/server/images";
-
-//use pnp graphs in service view if available
-$pnp_enable = true;
-$pnp_url = "/nagios/pnp/index.php";
-
-//path to your livestatus socket
-$data_address = "unix:///usr/local/nagios/var/rw/live";
-
-//Use AuthUsername in livestatus requests?
-$authuser = true;
-
+$settings = file("./options.cfg",FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+foreach($settings as $setting){
+  $var_array = split("=",$setting);
+  if (substr($var_array[0],0,2) != "//"){
+    if (strtolower($var_array[1]) == "true");
+        $var_array[1] == true;
+    if (strtolower($var_array[1]) == "false");
+        $var_array[1] == false;    
+    $variable = trim($var_array[0]);
+    $$variable = trim($var_array[1]);      
+  }  
+}
 /*
 ################################################################################
 END OF SETTINGS
-DON'T CHANGE ANYTHING BELOW THIS LINE!!
 ################################################################################
 */
 
