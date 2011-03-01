@@ -89,17 +89,22 @@
               </div>        
               <div data-role="fieldcontain">
  	                <fieldset data-role="controlgroup">
-		                <legend>Use HTTPS</legend>
-		                <input type="checkbox" name="use_https" id="use_https" />
-		                <label for="use_https">Use HTTPS</label>
-                  </fieldset>
-              </div> 
-              <div data-role="fieldcontain">
- 	                <fieldset data-role="controlgroup">
 		                <legend>Use Images</legend>
 		                <input type="checkbox" name="use_images" id="use_images" />
 		                <label for="use_images">Use Images</label>
                   </fieldset>
+              </div>
+              <div data-role="fieldcontain">
+	                 <label for="data_theme_select" class="select">Theme:</label>
+	                   <select name="data_theme_select" id="data_theme_select">
+		                    <option value="default">default</option>
+		                    <option value="a">A</option>
+		                    <option value="b">B</option>
+		                    <option value="c">C</option>
+		                    <option value="d">D</option>
+		                    <option value="e">E</option>
+		                    <option value="w">W</option>
+	                  </select>
               </div>     
               <a href='#' data-role='button' onClick="save_config();">Save</a>
               </form>                                                            

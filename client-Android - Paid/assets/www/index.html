@@ -66,7 +66,6 @@
         </div>   
         <div data-role="footer" data-position="fixed" class="footer"> 
          <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div>
-         <div id="problem_ads"></div>
          </div>                
     </div>
     
@@ -87,13 +86,25 @@
               <div data-role="fieldcontain">
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" value=""  />
-              </div>                      
+              </div>        
               <div data-role="fieldcontain">
  	                <fieldset data-role="controlgroup">
 		                <legend>Use Images</legend>
 		                <input type="checkbox" name="use_images" id="use_images" />
 		                <label for="use_images">Use Images</label>
                   </fieldset>
+              </div>
+              <div data-role="fieldcontain">
+	                 <label for="data_theme_select" class="select">Theme:</label>
+	                   <select name="data_theme_select" id="data_theme_select">
+		                    <option value="default">default</option>
+		                    <option value="a">A</option>
+		                    <option value="b">B</option>
+		                    <option value="c">C</option>
+		                    <option value="d">D</option>
+		                    <option value="e">E</option>
+		                    <option value="w">W</option>
+	                  </select>
               </div>     
               <a href='#' data-role='button' onClick="save_config();">Save</a>
               </form>                                                            

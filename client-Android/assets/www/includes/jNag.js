@@ -31,6 +31,7 @@ var current_type = "";
 var current_variable = "";
 var use_images = true;
 var home_pinned = "";
+var data_theme = "default";
 
 var admob_vars = {
         pubid: 'a14d4fbbf29feae', // publisher id
@@ -239,10 +240,14 @@ function create_browse_page(page_name,title,display_problems){
     } else {
       problems_string = '';
     }
+    var theme_string = "";
+    if (data_theme != "default"){
+         theme_string = ' data-theme="'+data_theme+'" ';
+    }
     if (jNag_platform.footer == true)    
-      pagestring = '<div data-role="page" data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div><div id="'+page_name+'_dynamic_ads"></div></div>';
+      pagestring = '<div data-role="page" '+theme_string+' data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"> <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div><div id="'+page_name+'_dynamic_ads"></div></div>';
     else
-      pagestring = '<div data-role="page"  data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"><div id="'+page_name+'_dynamic_ads"></div></div></div>';               
+      pagestring = '<div data-role="page" '+theme_string+' data-url="browse_'+page_name+'" id="browse_'+page_name+'"><div data-role="header" data-position="fixed"><h1>'+title+'</h1></div><div data-role="content">'+problems_string+'<div id="'+page_name+'_target"></div></div><div data-role="content"></div><div data-role="footer" data-position="fixed"><div id="'+page_name+'_dynamic_ads"></div></div></div>';               
     $('body').append(pagestring);
     if (jNag_platform.ads == true){
     	showAd(page_name+"_dynamic_ads");
@@ -424,6 +429,19 @@ function setAjax(){
 
 function jnag_init(){
     setAjax();
+    if (data_theme != "default"){
+       //$('div').live('pagebeforeshow',function(event, ui){          
+       //   $(this).attr("data-theme",data_theme);          
+       //});
+       $('div[data-role="page"]').attr("data-theme",data_theme).each(function(){
+          if ($(this).hasClass('ui-page')) {
+            $(this).page('destroy');
+            $(this).page()         
+          }
+       });
+       
+       
+    }        
     if (data_url == null || data_url == "" || data_url == "http://" || data_url == "https://"){
         $.mobile.changePage("#config_page", "pop", false, false); 
     } else {               
@@ -452,7 +470,10 @@ function load_config(){
     data_url = storage_get("data_url");    
     username = storage_get("username");
     password = storage_get("password");                
-    use_images = storage_get("use_images");    
+    use_images = storage_get("use_images");  
+    data_theme = storage_get("data_theme");    
+    if (data_theme == "" || data_theme == " ")
+        data_theme = "default";          
     if (data_url.indexOf("http") == -1)
     {
        if (storage_get("use_https") == true){
@@ -468,6 +489,7 @@ function load_config(){
     $('#username').val(username);
     $('#password').val(password);        
     $('#use_images').attr('checked', use_images);
+    $('#data_theme_select').val(data_theme);
     jnag_init();
 }
 
@@ -475,11 +497,13 @@ function save_config(){
    data_url = $('#data_url').val();
    username = $('#username').val();
    password = $('#password').val();      
-   use_images = $('#use_images').checked();   
+   use_images = $('#use_images').checked();
+   data_theme = $('#data_theme_select').val();   
    storage_set("data_url",data_url);
    storage_set("username",username);
    storage_set("password",password);   
    storage_set("use_images",use_images);
+   storage_set("data_theme",data_theme);
    jnag_init();       
    home();
 }     
