@@ -215,8 +215,7 @@ function cmd(form_id){
 }
 
 function home(){
-   parent.location.hash = '';
-   window.location.href=window.location.href.slice(0, -1);   
+    window.location="index.html";  
 }
 
 function refresh_page(){
