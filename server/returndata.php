@@ -343,8 +343,8 @@ END OF SETTINGS
         
         if ($type == "recheck_service"){
             $data = explode("|",$_GET['variable']);
-            $host_name = $data[1];
-            $service_name = $data[3];                        
+            $host_name = $data[0];
+            $service_name = $data[1];                        
             $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Re-Check");
             $browse_items[] = array("type"=>"form","id"=>"acknowledge_form","target"=>"acknowledge_dialog_target");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"7","target"=>"acknowledge_form");
@@ -358,7 +358,7 @@ END OF SETTINGS
         
         if ($type == "recheck_host"){
             $data = explode("|",$_GET['variable']);
-            $host_name = $data[1];                                    
+            $host_name = $data[0];                                    
             $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Re-Check");
             $browse_items[] = array("type"=>"form","id"=>"acknowledge_form","target"=>"acknowledge_dialog_target");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"96","target"=>"acknowledge_form");
@@ -371,8 +371,8 @@ END OF SETTINGS
         
         if ($type == "acknowledge_service"){
             $data = explode("|",$_GET['variable']);
-            $host_name = $data[1];
-            $service_name = $data[3];                        
+            $host_name = $data[0];
+            $service_name = $data[1];                        
             $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Acknowledge");
             $browse_items[] = array("type"=>"form","id"=>"acknowledge_form","target"=>"acknowledge_dialog_target");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"34","target"=>"acknowledge_form");
@@ -386,7 +386,7 @@ END OF SETTINGS
         
         if ($type == "acknowledge_host"){
             $data = explode("|",$_GET['variable']);
-            $host_name = $data[1];                        
+            $host_name = $data[0];                        
             $browse_items[] = array("type"=>"create_dialog","id"=>"acknowledge_dialog","title"=>"Acknowledge");
             $browse_items[] = array("type"=>"form","id"=>"acknowledge_form","target"=>"acknowledge_dialog_target");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"33","target"=>"acknowledge_form");
