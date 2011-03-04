@@ -429,7 +429,11 @@ END OF SETTINGS
     
     if (isset($_GET['count_problems'])){
         $count = 0;
-        $dat = run_query("GET hosts \nColumns: name \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 $authuser\nOutputFormat: json\n\n");         
+        $notification_filter = "";
+        if ($notification_off_alerts == false){
+          $notification_filter = "\nFilter: notifications_enabled = 1";
+        }
+        $dat = run_query("GET hosts \nColumns: name \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 $notification_filter $authuser\nOutputFormat: json\n\n");         
          $count += count(json_decode($dat));
          
          $dat = run_query("GET services \nColumns: display_name \nFilter: acknowledged = 0 \nFilter: state != 0$authuser\nOutputFormat: json\n\n");         
@@ -442,7 +446,11 @@ END OF SETTINGS
     
     if (isset($_GET['load_problems'])){
          $problems = "";
-         $dat = run_query("GET hosts \nColumns: name plugin_output \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 $authuser\nOutputFormat: json\n\n");
+         $notification_filter = "";
+        if ($notification_off_alerts == false){
+          $notification_filter = "\nFilter: notifications_enabled = 1";
+        }
+         $dat = run_query("GET hosts \nColumns: name plugin_output \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 $notification_filter $authuser\nOutputFormat: json\n\n");
          $data = json_decode($dat);         
          foreach($data as $this_host){
             $name = $this_host[0];
@@ -450,7 +458,7 @@ END OF SETTINGS
             $problems[] = array("host"=>$name,"service"=>"_host","type"=>"host","plugin_output"=>$output);
          }
          
-         $dat =  run_query("GET services \nColumns: host_name display_name plugin_output \nFilter: acknowledged = 0 \nFilter: state != 0$authuser\nOutputFormat: json\n\n");
+         $dat =  run_query("GET services \nColumns: host_name display_name plugin_output \nFilter: acknowledged = 0 \nFilter: state != 0 $notification_filter $authuser\nOutputFormat: json\n\n");
           
           $data =  json_decode($dat);
           foreach($data as $this_host){
