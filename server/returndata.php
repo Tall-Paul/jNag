@@ -436,7 +436,7 @@ END OF SETTINGS
         $dat = run_query("GET hosts \nColumns: name \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 $notification_filter $authuser\nOutputFormat: json\n\n");         
          $count += count(json_decode($dat));
          
-         $dat = run_query("GET services \nColumns: display_name \nFilter: acknowledged = 0 \nFilter: state != 0$authuser\nOutputFormat: json\n\n");         
+         $dat = run_query("GET services \nColumns: display_name \nFilter: acknowledged = 0 \nFilter: state != 0$notification_filter $authuser\nOutputFormat: json\n\n");         
          
          $count += count(json_decode($dat));  
          
