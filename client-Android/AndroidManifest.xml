@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="uk.co.tall_paul.jnag"
-      android:versionName="0.79" android:versionCode="079">
+      android:versionName="0.80" android:versionCode="080">
       <supports-screens
 android:largeScreens="true"
 android:normalScreens="true"

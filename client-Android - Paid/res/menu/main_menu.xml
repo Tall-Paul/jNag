@@ -8,4 +8,5 @@
     	  android:title="@string/refresh" />
    	<item android:id="@+id/options" 
     	  android:title="@string/options" />
+   	<item android:id="@+id/service" android:title="Service"></item>
 </menu>

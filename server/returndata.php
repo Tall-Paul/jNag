@@ -12,9 +12,8 @@ foreach($settings as $setting){
     $var_array[1] = trim($var_array[1]);
     if (strtolower($var_array[1]) == "true")
         $var_array[1] = true;
-    if (strtolower($var_array[1]) == "false"){
+    if (strtolower($var_array[1]) == "false")
         $var_array[1] = false;    
-    }
     $variable = $var_array[0];
     $$variable = $var_array[1];   
   }  

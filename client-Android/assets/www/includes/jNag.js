@@ -154,6 +154,9 @@ function storage_set(key,value){
       }
    }
    window.localStorage.setItem(key,value);  
+   if (jNag_platform.phonegap_settings == true){	   
+      window.phoneGapSettings.setSetting(key,value);
+   }
 }
 
 function storage_get(key){
@@ -502,7 +505,7 @@ function save_config(){
    storage_set("username",username);
    storage_set("password",password);   
    storage_set("use_images",use_images);
-   storage_set("data_theme",data_theme);
+   storage_set("data_theme",data_theme);   
    jnag_init();       
    home();
 }     

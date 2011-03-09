@@ -6,4 +6,8 @@
 <string name="home">Home</string>
 <string name="options">Options</string>
 <string name="refresh">Refresh</string>
+<string name="service_stop">Stop Service</string>
+<string name="service_start">Start Service</string>
+<string name="notifications">Notifications</string>
+<string name="service">Service enabled</string>
 </resources>
