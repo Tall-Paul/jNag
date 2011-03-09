@@ -8,12 +8,15 @@ $settings = file("./options.cfg",FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 foreach($settings as $setting){
   $var_array = split("=",$setting);
   if (substr($var_array[0],0,2) != "//"){
-    if (strtolower($var_array[1]) == "true");
-        $var_array[1] == true;
-    if (strtolower($var_array[1]) == "false");
-        $var_array[1] == false;    
-    $variable = trim($var_array[0]);
-    $$variable = trim($var_array[1]);      
+    $var_array[0] = trim($var_array[0]);
+    $var_array[1] = trim($var_array[1]);
+    if (strtolower($var_array[1]) == "true")
+        $var_array[1] = true;
+    if (strtolower($var_array[1]) == "false"){
+        $var_array[1] = false;    
+    }
+    $variable = $var_array[0];
+    $$variable = $var_array[1];   
   }  
 }
 /*
@@ -430,14 +433,13 @@ END OF SETTINGS
     if (isset($_GET['count_problems'])){
         $count = 0;
         $notification_filter = "";
-        if ($notification_off_alerts == false){
+        if ($notification_off_alerts == false){          
           $notification_filter = "\nFilter: notifications_enabled = 1";
         }
         $dat = run_query("GET hosts \nColumns: name \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 $notification_filter $authuser\nOutputFormat: json\n\n");         
          $count += count(json_decode($dat));
          
          $dat = run_query("GET services \nColumns: display_name \nFilter: acknowledged = 0 \nFilter: state != 0$notification_filter $authuser\nOutputFormat: json\n\n");         
-         
          $count += count(json_decode($dat));  
          
          $return_array['problem_count'] = "$count";  
@@ -449,7 +451,7 @@ END OF SETTINGS
          $notification_filter = "";
         if ($notification_off_alerts == false){
           $notification_filter = "\nFilter: notifications_enabled = 1";
-        }
+         }
          $dat = run_query("GET hosts \nColumns: name plugin_output \nFilter: acknowledged = 0 \nFilter: state != 0\nFilter: hard_state != 0 \nFilter: current_attempt > 1 \nOr: 3 $notification_filter $authuser\nOutputFormat: json\n\n");
          $data = json_decode($dat);         
          foreach($data as $this_host){
