@@ -169,7 +169,7 @@ END OF SETTINGS
               $browse_items[] = array("heading"=>"Hosts","text"=>$problems." Host Problems","type"=>"hosts","variable"=>"","count"=>$count,"target"=>"top_list", "image"=>"images/host.png");
            }
            
-           $count = count(json_decode(run_query("GET servicegroups \nColumns: name\nAuthUser: $username\nOutputFormat: json\n\n")));
+           $count = count(json_decode(run_query("GET servicegroups \nColumns: name$authuser\nOutputFormat: json\n\n")));
            if ($count > 0){           
               $browse_items[] = array("heading"=>"ServiceGroups","text"=>"","type"=>"servicegroups","variable"=>"","count"=>$count,"target"=>"top_list", "image"=>"images/servicegroup.png");
            }           
