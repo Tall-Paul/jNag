@@ -228,7 +228,7 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"list","target"=>"servicegroups_target","id"=>"servicegroups_list");
             $data = json_decode(run_query("GET servicegroups \nColumns: name num_services num_services_ok$authuser\nOutputFormat: json\n\n"));            
             foreach($data as $servicegroup){
-                $problems = $servicegroup[2] - $servicegroup[1];
+                $problems = $servicegroup[1] - $servicegroup[2];
                 $browse_items[] = array("heading"=>$servicegroup[0],"text"=>$problems." Service problems","type"=>"services","variable"=>"groups|".$servicegroup[0],"count"=>$servicegroup[1],"target"=>"servicegroups_list", "image"=>"images/servicegroup.png");
             }
         }
