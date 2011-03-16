@@ -4,7 +4,7 @@ var jNag_platform = {
       phonegap_settings: true, //save settings to native storage
       ads: false,      //load advertising library
       footer: false,    //show footers
-      version: "1.8.0"  //version string
+      version: "1.8.1"  //version string
 };
 
 

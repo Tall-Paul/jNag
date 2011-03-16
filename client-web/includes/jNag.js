@@ -153,17 +153,21 @@ function storage_set(key,value){
         value = "jNag_bFalse";
       }
    }
+   //alert("setting " + key + " to " + value);
    window.localStorage.setItem(key,value);  
 }
 
 function storage_get(key){
      var val = window.localStorage.getItem(key);
+     //("got " + val + " for " + key)
      if (val == null)
         return "";
      if (val == "jNag_bTrue")
         return true;
-     if (val == "jNag_bFalse")
+     if (val == "jNag_bFalse"){
+    	//alert("returning false"); 
         return false;   
+     }
      return val;      
 }
 
@@ -457,7 +461,7 @@ function jnag_init(){
                 }              
             }
          });
-      }  
+      } 
     }
 
 
@@ -481,12 +485,12 @@ function load_config(){
           data_url = "http://" + data_url;
        }
     }
-    if (use_images == "")
+    if (use_images === "")
         use_images = true;
     home_pinned = storage_get("home_pinned");    
     $('#data_url').val(data_url);   
     $('#username').val(username);
-    $('#password').val(password);        
+    $('#password').val(password);   
     $('#use_images').attr('checked', use_images);
     $('#data_theme_select').val(data_theme);
     jnag_init();

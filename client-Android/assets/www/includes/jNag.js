@@ -148,14 +148,16 @@ function storage_set(key,value){
       value = "";
    if (typeof(value) == "boolean"){
       if (value == true){
-        value = "jNag_bTrue";
+        val = "jNag_bTrue";
       } else {
-        value = "jNag_bFalse";
+        val = "jNag_bFalse";
       }
+   } else {
+	   val = value;
    }
-   window.localStorage.setItem(key,value);  
+   window.localStorage.setItem(key,val);  
    if (jNag_platform.phonegap_settings == true){	   
-      window.phoneGapSettings.setSetting(key,value);
+      window.phoneGapSettings.setSetting(key,val);
    }
 }
 
