@@ -189,7 +189,7 @@ END OF SETTINGS
         }        
         
         if ($type == "hostgroups"){
-            $browse_items[] = array("type"=>"create_page","id"=>"hostgroups","title"=>"hostgroups","show_problems"=>true);            
+            $browse_items[] = array("type"=>"create_page","id"=>"hostgroups","title"=>"HostGroups","show_problems"=>true);            
             $browse_items[] = array("type"=>"list","target"=>"hostgroups_target","id"=>"hostgroups_list");
             $data = json_decode(run_query("GET hostgroups \nColumns: name num_hosts num_hosts_down num_hosts_unreach$authuser\nOutputFormat: json\n\n"));
             foreach($data as $hostgroup){
