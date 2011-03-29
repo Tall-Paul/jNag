@@ -261,10 +261,10 @@ END OF SETTINGS
                   $browse_items[] = array("type"=>"text","heading"=>$data[0][1],"text"=>"<table><tr><td>Address: </td><td>".$data[0][8]."</td></tr><tr><td>Last Checked: </td><td>$last_check</td></tr><tr><td>Last Up: </td><td> $last_up</td></tr><tr><td>Last Down: </td><td>$last_down</td></tr><tr><td>Last Unreachable: </td><td>$last_unreachable</td></tr></table>","target"=>"services_target");          
                   if (is_array($data[0][5])){                                           
                      $comments = json_decode(run_query("GET comments\nColumns: author comment entry_time\nFilter: host_name = $filter_var\nOutputFormat: json\n\n"));
-                     $browse_items[] = array("type"=>"list","target"=>"services_target","id"=>"comments_list");
-                     $browse_items[] = array("text"=>"Comments","type"=>"header","target"=>"comments_list");
+                     $browse_items[] = array("type"=>"list","target"=>"services_target","id"=>"host_comments_list");
+                     $browse_items[] = array("text"=>"Comments","type"=>"header","target"=>"host_comments_list");
                      foreach($comments as $comment){
-                         $browse_items[] = array("text"=>$comment[1],"type"=>"nolink","target"=>"comments_list");
+                         $browse_items[] = array("text"=>$comment[1],"type"=>"nolink","target"=>"host_comments_list");
                      }                     
                   }   
                   $browse_items[] = array("type"=>"browse_button","button_text"=>"Add Comment","button_type"=>"comment_host","button_variable"=>$filter_var,"target"=>"services_target");
@@ -316,10 +316,10 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"text","heading"=>$service_name." on ".$host,"text"=>"<table><tr><tr><td>Host Address: </td><td>".$data[0][2]."</td></tr><td>Output: </td><td>".$data[0][10]."</td></tr><tr><td>Last Checked: </td><td>$last_check</td></tr><tr><td>Last OK: </td><td> $last_ok</td></tr><tr><td>Last Warning: </td><td>$last_warning</td></tr><tr><td>Last Critical: </td><td>$last_critical</td></tr></table>","target"=>"service_target");
             if (is_array($data[0][4])){                                         
                      $comments = json_decode(run_query("GET comments\nColumns: author comment entry_time\nFilter: host_name = $host\nFilter: service_display_name = $service_name $authuser \nOutputFormat: json\n\n"));
-                     $browse_items[] = array("type"=>"list","target"=>"service_target","id"=>"comments_list");
-                     $browse_items[] = array("text"=>"Comments","type"=>"header","target"=>"comments_list");
+                     $browse_items[] = array("type"=>"list","target"=>"service_target","id"=>"service_comments_list");
+                     $browse_items[] = array("text"=>"Comments","type"=>"header","target"=>"service_comments_list");
                      foreach($comments as $comment){
-                         $browse_items[] = array("text"=>$comment[1],"type"=>"nolink","target"=>"comments_list");
+                         $browse_items[] = array("text"=>$comment[1],"type"=>"nolink","target"=>"service_comments_list");
                      }
             }              
             $browse_items[] = array("type"=>"browse_button","button_text"=>"Add Comment","button_type"=>"comment_service","button_variable"=>$_GET['variable'],"target"=>"service_target");
