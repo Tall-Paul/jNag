@@ -147,7 +147,7 @@ function storage_set(key,value){
    if (value == null)
       value = "";
    if (typeof(value) == "boolean"){
-      if (value == true){
+      if (value === true){
         value = "jNag_bTrue";
       } else {
         value = "jNag_bFalse";
@@ -155,6 +155,9 @@ function storage_set(key,value){
    }
    //alert("setting " + key + " to " + value);
    window.localStorage.setItem(key,value);  
+   if (jNag_platform.phonegap_settings == true){     
+        window.phoneGapSettings.setSetting(key,value);
+   }
 }
 
 function storage_get(key){
