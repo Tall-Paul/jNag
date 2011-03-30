@@ -4,7 +4,7 @@
 	<classpathentry kind="lib" path="libs/phonegap-0.9.3.jar"/>
 	<classpathentry kind="lib" path="res/menu/main_menu.xml"/>
 	<classpathentry kind="lib" path="res/layout/jnag_widgetlayout.xml"/>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="android/webkit/|android.webkit/|android/net/http/|android.net.http/" kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

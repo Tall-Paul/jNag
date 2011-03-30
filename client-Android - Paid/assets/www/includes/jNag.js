@@ -132,6 +132,11 @@ function browse(type,variable){
   
   $.mobile.pageLoading();
   var pagename = "browse_"+type;  
+  if (jNag_platform.phonegap_get){
+	  current_type = type;  
+      current_variable = variable;
+	  element_builder(jQuery.parseJSON(window.webGetter.get("?browse=true&type="+type+"&variable="+variable+"&rand="+randomNum()).replace("\\","")));
+  } else {
    $.ajax({
             data: "browse=true&type="+type+"&variable="+variable+"&rand="+randomNum(),
             success: function(data){
@@ -139,7 +144,8 @@ function browse(type,variable){
                         current_type = type;  
                         current_variable = variable;          
                     }
-      });            
+      }); 
+  }
 }
 
 
@@ -269,6 +275,7 @@ function create_generic_dialog(page_name, title){
 }
 
 function element_builder(data){
+	alert("building with " + data);
     var refresh = new Array();
       $.each(data.browse_items, function(key, value){              
         var count = value.count;

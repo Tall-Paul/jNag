@@ -48,8 +48,8 @@
             
         </div>
         <div data-role="footer" data-position="fixed" class="footer" id='main_footer'>                            
-                <a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a> 
-                <a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a>                
+                <a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right main-button">Options</a> 
+                <a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right main-button">refresh</a>                
         </div>
  
             
@@ -96,14 +96,14 @@
               </div>
               <div data-role="fieldcontain">
 	                 <label for="data_theme_select" class="select">Theme:</label>
-	                   <select name="data_theme_select" id="data_theme_select">
+	                   <select name="data_theme_select" id="data_theme_select" onChange="setTheme()">
 		                    <option value="default">default</option>
-		                    <option value="a">A</option>
-		                    <option value="b">B</option>
-		                    <option value="c">C</option>
-		                    <option value="d">D</option>
-		                    <option value="e">E</option>
-		                    <option value="w">W</option>
+		                    <option value="a" data-theme="A">Black</option>
+		                    <option value="b" data-theme="B">Blue</option>
+		                    <option value="c" data-theme="C">White</option>
+		                    <option value="d" data-theme="D">Grey</option>
+		                    <option value="e" data-theme="E">Yellow</option>
+		                    <option value="w" data-theme="W">Glass</option>
 	                  </select>
               </div>     
               <a href='#' data-role='button' onClick="save_config();">Save</a>

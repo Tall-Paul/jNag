@@ -2,16 +2,19 @@ package uk.co.tall_paul.jnag.paid;
 
 import java.util.Calendar;
 
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.phonegap.*;
 import uk.co.tall_paul.jnag.paid.R;
@@ -20,6 +23,7 @@ import uk.co.tall_paul.jnag.paid.jnag_widgetinfo.UpdateService;
 public class App extends DroidGap {
 	
 	private settingsClass sc;
+	private webGetter wg;
 
 	
     /** Called when the activity is first created. */
@@ -27,8 +31,10 @@ public class App extends DroidGap {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.init();        
-        sc = new settingsClass(this.getApplicationContext());       
-        appView.addJavascriptInterface(sc,"phoneGapSettings"); 
+        sc = new settingsClass(this.getApplicationContext());  
+        wg = new webGetter(this.getApplicationContext());
+        appView.addJavascriptInterface(sc,"phoneGapSettings");
+        appView.addJavascriptInterface(wg, "webGetter");
         super.loadUrl("file:///android_asset/www/index.html");
         String service_enabled = sc.getSetting("Service_enabled");
         if (service_enabled == "1"){
@@ -48,6 +54,7 @@ public class App extends DroidGap {
       	  	mgr.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),900000,pi);
         }
     }
+    
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
