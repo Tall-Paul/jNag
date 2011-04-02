@@ -171,7 +171,7 @@ END OF SETTINGS
            
            $count = count(json_decode(run_query("GET servicegroups \nColumns: name$authuser\nOutputFormat: json\n\n")));
            if ($count > 0){           
-              $browse_items[] = array("heading"=>"ServiceGroups","text"=>=>" ","type"=>"servicegroups","variable"=>" ","count"=>$count,"target"=>"top_list", "image"=>"images/servicegroup.png");
+              $browse_items[] = array("heading"=>"ServiceGroups","text"=>" ","type"=>"servicegroups","variable"=>" ","count"=>$count,"target"=>"top_list", "image"=>"images/servicegroup.png");
            }           
            $services = json_decode(run_query("GET services \nColumns: display_name state\nFilter: display_name !~ Generic Event$authuser\nOutputFormat: json\n\n"));
            $count = 0;
