@@ -155,7 +155,7 @@ END OF SETTINGS
            $browse_items[] = array("type"=>"list","target"=>"top_target","id"=>"top_list");        
            $count = count(json_decode(run_query("GET hostgroups \nColumns: name $authuser\nOutputFormat: json\n\n")));           
            if ($count > 0){           
-              $browse_items[] = array("heading"=>"HostGroups","text"=>"","type"=>"hostgroups","variable"=>"","count"=>$count,"target"=>"top_list", "image"=>"images/hostgroup.png");
+              $browse_items[] = array("heading"=>"HostGroups","text"=>" ","type"=>"hostgroups","variable"=>" ","count"=>$count,"target"=>"top_list", "image"=>"images/hostgroup.png");
            }
            $hosts = json_decode(run_query("GET hosts \nColumns: name state current_attempt hard_state$authuser\nOutputFormat: json\n\n"));
            $count = 0;
@@ -166,12 +166,12 @@ END OF SETTINGS
                 $problems++;
            }
            if ($count > 0){           
-              $browse_items[] = array("heading"=>"Hosts","text"=>$problems." Host Problems","type"=>"hosts","variable"=>"","count"=>$count,"target"=>"top_list", "image"=>"images/host.png");
+              $browse_items[] = array("heading"=>"Hosts","text"=>$problems." Host Problems","type"=>"hosts","variable"=>" ","count"=>$count,"target"=>"top_list", "image"=>"images/host.png");
            }
            
            $count = count(json_decode(run_query("GET servicegroups \nColumns: name$authuser\nOutputFormat: json\n\n")));
            if ($count > 0){           
-              $browse_items[] = array("heading"=>"ServiceGroups","text"=>"","type"=>"servicegroups","variable"=>"","count"=>$count,"target"=>"top_list", "image"=>"images/servicegroup.png");
+              $browse_items[] = array("heading"=>"ServiceGroups","text"=>=>" ","type"=>"servicegroups","variable"=>" ","count"=>$count,"target"=>"top_list", "image"=>"images/servicegroup.png");
            }           
            $services = json_decode(run_query("GET services \nColumns: display_name state\nFilter: display_name !~ Generic Event$authuser\nOutputFormat: json\n\n"));
            $count = 0;
@@ -182,7 +182,7 @@ END OF SETTINGS
                 $problems++;
            }
            if ($count > 0){           
-              $browse_items[] = array("heading"=>"Services","text"=>$problems." Service Problems","type"=>"services","variable"=>"","count"=>$count,"target"=>"top_list", "image"=>"images/service.png");
+              $browse_items[] = array("heading"=>"Services","text"=>$problems." Service Problems","type"=>"services","variable"=>" ","count"=>$count,"target"=>"top_list", "image"=>"images/service.png");
            }
                       
                       
@@ -286,7 +286,7 @@ END OF SETTINGS
                  }                
                  if ($service[1] != $last_host){
                       
-                      $browse_items[] = array("text"=>$header_text.$service[1],"type"=>"header","variable"=>"","count"=>"-1","target"=>"services_list");
+                      $browse_items[] = array("text"=>$header_text.$service[1],"type"=>"header","variable"=>" ","count"=>"-1","target"=>"services_list");
                  }
                  $variable = $service[1]."|".$service[0];
                  if ($service[3] != 0){
@@ -328,16 +328,16 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"browse_button","button_text"=>"Pin to Home","button_type"=>"pin_button","button_variable"=>$_GET['variable'],"target"=>"service_target");
             $browse_items[] = array("type"=>"browse_button","button_text"=>"UnPin","button_type"=>"unpin_button","button_variable"=>$_GET['variable'],"target"=>"service_target");                      
             if ($pnp_enable == true){                          
-              $browse_items[] = array("type"=>"text","heading"=>"last 24 hours","text"=>"","target"=>"service_target");
+              $browse_items[] = array("type"=>"text","heading"=>"last 24 hours","text"=>" ","target"=>"service_target");
               $browse_items[] = array("type"=>"pnp","host"=>$host,"service"=>$service_name,"target"=>"service_target","pnp_view"=>"1");
               
-              $browse_items[] = array("type"=>"text","heading"=>"last week","text"=>"","target"=>"service_target");
+              $browse_items[] = array("type"=>"text","heading"=>"last week","text"=>" ","target"=>"service_target");
               $browse_items[] = array("type"=>"pnp","host"=>$host,"service"=>$service_name,"target"=>"service_target","pnp_view"=>"2");
               
-              $browse_items[] = array("type"=>"text","heading"=>"last month","text"=>"","target"=>"service_target");
+              $browse_items[] = array("type"=>"text","heading"=>"last month","text"=>" ","target"=>"service_target");
               $browse_items[] = array("type"=>"pnp","host"=>$host,"service"=>$service_name,"target"=>"service_target","pnp_view"=>"3");
               
-              $browse_items[] = array("type"=>"text","heading"=>"last year","text"=>"","target"=>"service_target");
+              $browse_items[] = array("type"=>"text","heading"=>"last year","text"=>" ","target"=>"service_target");
               $browse_items[] = array("type"=>"pnp","host"=>$host,"service"=>$service_name,"target"=>"service_target","pnp_view"=>"4");
             }                                  
             //$browse_items[] = array("type"=>"text","heading"=>"Last Check","text"=>$service[3]);            
@@ -381,8 +381,8 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"service","val"=>$service_name,"target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>"");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
         
@@ -394,8 +394,8 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"33","target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");            
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>"");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
         
@@ -406,8 +406,8 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_typ","val"=>"1","target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");            
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>"");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
         
@@ -421,8 +421,8 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"input_hidden","id"=>"cmd_mod","val"=>"2","target"=>"acknowledge_form");            
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host,"target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_hidden","id"=>"service","val"=>$service,"target"=>"acknowledge_form");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>"");
-            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>"");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
                 
@@ -480,7 +480,7 @@ END OF SETTINGS
          
           $return_array['problems'] = $problems;
          } else {
-            $problems[] = array("host"=>"","service"=>"","type"=>"none","plugin_output"=>"");
+            $problems[] = array("host"=>" ","service"=>" ","type"=>"none","plugin_output"=>" ");
             $return_array['problems'] = $problems;
             
          }
