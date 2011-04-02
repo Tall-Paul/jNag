@@ -129,13 +129,19 @@ function browse(type,variable){
      home_unpin(dat[0],dat[1]);
      return; 
   }  
-  
   $.mobile.pageLoading();
   var pagename = "browse_"+type;  
   if (jNag_platform.phonegap_get){
 	  current_type = type;  
       current_variable = variable;
-	  element_builder(jQuery.parseJSON(window.webGetter.get("?browse=true&type="+type+"&variable="+variable+"&rand="+randomNum()).replace("\\","")));
+      try{
+    	  result_string = window.webGetter.get("?browse=true&type="+type+"&variable="+variable+"&rand="+randomNum()).replace("\\","");
+    	  result = jQuery.parseJSON(result_string);
+    	  element_builder(result);
+      }
+      catch(e){
+    	  alert("Error parsing native JSON!!");
+      }
   } else {
    $.ajax({
             data: "browse=true&type="+type+"&variable="+variable+"&rand="+randomNum(),
@@ -275,7 +281,7 @@ function create_generic_dialog(page_name, title){
 }
 
 function element_builder(data){
-	alert("building with " + data);
+	//alert("building with " + data);
     var refresh = new Array();
       $.each(data.browse_items, function(key, value){              
         var count = value.count;
@@ -359,11 +365,11 @@ function element_builder(data){
              default:
                //default is a list item, with a link to the next browse page, requires 'variable', 'count' and 'text' in data 
                browsestring = "browse('"+value.type+"','"+value.variable+"');";
-               if (value.image != "" && value.image != null && use_images == true)
+               if (value.image != "" && value.image != " " && value.image != null && use_images == true)
                   imagestring = "<img class='ui-li-thumb' src='"+value.image+"' />";
                else 
                   imagestring = "";
-               if (value.heading != "" && value.heading != null)
+               if (value.heading != "" && value.heading != " " && value.heading != null)
                   textstring = "<h3>"+value.heading+"</h3><p>"+value.text+"<p>";
                else
                   textstring = "<h3>"+value.text+"</h3>";

@@ -2,8 +2,12 @@ package uk.co.tall_paul.jnag.paid;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.InputStream;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+import java.io.InputStream;
+
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
@@ -21,6 +25,7 @@ import javax.net.ssl.X509TrustManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.util.Log;
+import android.os.Bundle;
 
 public class webGetter {
 	
@@ -67,23 +72,35 @@ public class webGetter {
 	         }
 	 }
 
+	 
+	public void log(String message){
+		String eol = System.getProperty("line.separator");
+		try {
+			
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(context.openFileOutput("ReturnedJSON.txt", 2)));
+			writer.write(message + eol);
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	public String get(String parameters){
 		String returnedVal;
-		
 		//get url, username, password
         sc = new settingsClass(context);
         String data_url = sc.getSetting("data_url");
         final String password = sc.getSetting("password");
         final String username = sc.getSetting("username");
-        Log.d("jNag","Get: " + data_url + parameters);
+        Log.d("jNag","Get: " + data_url + parameters.replace(" ", ""));
         //Read problem count
         Authenticator.setDefault(new Authenticator(){
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username,password.toCharArray());
             }});
-        HttpURLConnection c;       
+        HttpURLConnection c;    
+        StringBuilder total = new StringBuilder();
         try {
 			//try to connect using saved credentials and URL
         	if (data_url.toLowerCase().contains("https")){
@@ -93,20 +110,20 @@ public class webGetter {
         	} else {
         		c = (HttpURLConnection) new URL(data_url + parameters).openConnection();
         	}
-			InputStream in = new BufferedInputStream(c.getInputStream());		    
-		    BufferedReader r = new BufferedReader(new InputStreamReader(in));
-			StringBuilder total = new StringBuilder();
+			InputStream in = new BufferedInputStream(c.getInputStream(),40960);		    
+		    BufferedReader r = new BufferedReader(new InputStreamReader(in),40960);
+			
 			String line;
 			while ((line = r.readLine()) != null) {
 			    total.append(line);
 			}
-			returnedVal = total.toString();
 			c.disconnect();
 		} catch (Exception e) {
 			Log.d("jNag","connection error " + e.getLocalizedMessage() + "in webgetter");
-			return "";
 		}
-		Log.d("jNag","webGetter returning: " + returnedVal);
+		returnedVal = total.toString().replace("\\\"","");
+		Log.d("jNag","webGetter returning: " + returnedVal.replace("\\", "").trim());
+		log(returnedVal.replace("\\", "").trim());
 		return returnedVal.replace("\\", "").trim();
 	}
 	
