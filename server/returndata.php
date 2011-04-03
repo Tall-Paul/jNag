@@ -200,7 +200,7 @@ END OF SETTINGS
         if ($type == "hosts"){
             $browse_items[] = array("type"=>"create_page","id"=>"hosts","title"=>"Hosts","show_problems"=>true);            
             $browse_items[] = array("type"=>"list","target"=>"hosts_target","id"=>"hosts_list");
-            if (isset($_GET['variable']) && $_GET['variable'] != ""){
+            if (isset($_GET['variable']) && $_GET['variable'] != "" && $_GET['variable'] != " "){
                   $filter = "\nFilter: groups >= ".$_GET['variable'];  
             } else {
                   $filter = "";
