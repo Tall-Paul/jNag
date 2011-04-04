@@ -139,7 +139,7 @@ END OF SETTINGS
                  } else {
                     $colour = "fine";
                  }              
-                $browse_items[] = array("heading"=>$service[0],"text"=>$service[2],"type"=>"service","variable"=>$variable,"count"=>"1-","colour"=>$colour,"target"=>"pinned_list", "image"=>$image);
+                $browse_items[] = array("heading"=>$service[0]." (".$service[1].")","text"=>$service[2],"type"=>"service","variable"=>$variable,"count"=>"1-","colour"=>$colour,"target"=>"pinned_list", "image"=>$image);
                 }
             }
             }
@@ -235,7 +235,7 @@ END OF SETTINGS
         
            if ($type == "services"){  
               $browse_items[] = array("type"=>"create_page","id"=>"services","title"=>"Services","show_problems"=>true);                                             
-              if (isset($_GET['variable']) && $_GET['variable'] != ""){              
+              if (isset($_GET['variable']) && $_GET['variable'] != "" && $_GET['variable'] != " "){              
                   $var = explode("|",$_GET['variable']);
                   $filter_type = $var[0];                  
                   $filter_var = $var[1];                  
@@ -276,7 +276,8 @@ END OF SETTINGS
               $browse_items[] = array("type"=>"list","target"=>"services_target","id"=>"services_list");
               $last_host = "";
               foreach($data as $service){ 
-                 if ($service[0] != "Generic Event"){ 
+              	 //ignore default 'generic event' unless it's the only service for this host.
+                 if ($service[0] != "Generic Event" || count($data) == 1){ 
                  $image = "images/service.png";              
                  if (is_array($service[6])){
                   foreach($service[6] as $key=>$value){                      
