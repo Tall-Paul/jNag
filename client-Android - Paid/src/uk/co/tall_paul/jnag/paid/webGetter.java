@@ -93,7 +93,7 @@ public class webGetter {
         String data_url = sc.getSetting("data_url");
         final String password = sc.getSetting("password");
         final String username = sc.getSetting("username");
-        Log.d("jNag","Get: " + data_url + parameters.replace(" ", ""));
+        //Log.d("jNag","Get: " + data_url + parameters.replace(" ", ""));
         //Read problem count
         Authenticator.setDefault(new Authenticator(){
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -112,7 +112,6 @@ public class webGetter {
         	}
 			InputStream in = new BufferedInputStream(c.getInputStream(),40960);		    
 		    BufferedReader r = new BufferedReader(new InputStreamReader(in),40960);
-			
 			String line;
 			while ((line = r.readLine()) != null) {
 			    total.append(line);
@@ -123,7 +122,6 @@ public class webGetter {
 		}
 		returnedVal = total.toString().replace("\\\"","");
 		Log.d("jNag","webGetter returning: " + returnedVal.replace("\\", "").trim());
-		log(returnedVal.replace("\\", "").trim());
 		return returnedVal.replace("\\", "").trim();
 	}
 	

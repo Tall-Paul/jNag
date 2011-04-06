@@ -22,7 +22,7 @@
 
 var data_url;
 var problem_count = 0;
-var global_poll_time = 5000;
+var global_poll_time = 30000;
 var username;
 var password;
 var cmd_url = "";
@@ -402,7 +402,7 @@ function pulser(){
         
 function jNag_polling(poll_time){
             $('.problem_list').show();            
-            global_poll_time = poll_time;                        
+            //global_poll_time = poll_time;                        
             setTimeout("count_problems(true)",100);
             setInterval("pulser()",1000);                                    
             setTimeout("browse('top','')",100);          

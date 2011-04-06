@@ -110,8 +110,12 @@ END OF SETTINGS
           $last_table = $host[2];          
           echo "<tr><td>".$host[0]."</td><td>".$host[1]."</td><td>".$host[2]."</td><td>".$host[3]."</td></tr>";
        }              
-       echo "</table>";
-       
+       echo "</table>";    
+    }
+    
+    if (isset($_GET['test'])){
+    	
+    	
     }
     
      if (isset($_GET['get_pinned'])){
@@ -478,12 +482,10 @@ END OF SETTINGS
            $service[$key] = $row['service'];       
           }
           array_multisort($host, SORT_DESC, $service, SORT_DESC, $problems);
-         
           $return_array['problems'] = $problems;
          } else {
             $problems[] = array("host"=>" ","service"=>" ","type"=>"none","plugin_output"=>" ");
             $return_array['problems'] = $problems;
-            
          }
     
     }

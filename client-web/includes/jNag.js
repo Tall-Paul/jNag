@@ -22,7 +22,7 @@
 
 var data_url;
 var problem_count = 0;
-var global_poll_time = 5000;
+var global_poll_time = 30000;
 var username;
 var password;
 var cmd_url = "";
@@ -42,7 +42,6 @@ var admob_vars = {
       };
 
 
-
 function showAd(element)
 {
 	$.getScript("http://mm.admob.com/static/iphone/iadmob.js",function(){
@@ -57,6 +56,10 @@ jQuery.fn.checked = function(){
          return jQuery(this).is(':checked');
 }
 
+function native_get_JSON(parameters){
+	result_string = window.webGetter.get(parameters+"&rand="+randomNum());
+	return jQuery.parseJSON(result_string);	  
+}
 
 function home_pin(host,service){
     home_pinned = home_pinned.replace(host+"|"+service+",","");
@@ -69,17 +72,25 @@ function home_unpin(host,service){
      storage_set("home_pinned",home_pinned);
 }
 
+function populate_pinned(data){
+	$('#pinned_list').remove();            
+    element_builder(data); 
+}
 
 function get_pinned(){
-    
     if (home_pinned != ""){
+       
+    	if (jNag_platform.phonegap_get)
+    	{
+    		populate_pinned(native_get_JSON("?get_pinned="+home_pinned));
+    	} else {	
       $.ajax({
             data: "get_pinned="+home_pinned+"&rand="+randomNum(),
             success: function(data){       
-                   $('#pinned_list').remove();            
-                   element_builder(data);                                       
+                 populate_pinned(data);                                        
             }
       });
+     }
     }
 }
 
@@ -91,14 +102,23 @@ function randomNum(){
     return Math.floor(Math.random()*100001);
 }
 
+function fix_string(stringin){
+	return stringin.replace(/(\s|&nbsp;|&\#160;)+/gi,"%20");
+}
+
 
 function count_problems(repeat){  
+	if (jNag_platform.phonegap_get)
+	{
+		counted_problems(native_get_JSON("?count_problems=true"));
+	} else {
       $.ajax({
             data: "count_problems=true&rand="+randomNum(),
             success: function(data){
                         counted_problems(data);                                  
             }
       });
+	}  
       get_pinned();
       if (repeat == true){
          setTimeout("count_problems(true);",global_poll_time);
@@ -106,12 +126,17 @@ function count_problems(repeat){
 }
 
 function load_problems(){   
+	if (jNag_platform.phonegap_get)
+	{
+		populate_problems(native_get_JSON("?load_problems=true"));
+	} else {
       $.ajax({
             data: "load_problems=true&rand="+randomNum(),
             success: function(data){
                         populate_problems(data);                   
                     }
       });   
+	}
 }
 
 
@@ -123,15 +148,24 @@ function browse(type,variable){
      home_pin(dat[0],dat[1]); 
      return;
   }
-  
   if (type == "unpin_button"){
      dat = variable.split("|");
      home_unpin(dat[0],dat[1]);
      return; 
   }  
-  
   $.mobile.pageLoading();
   var pagename = "browse_"+type;  
+  if (jNag_platform.phonegap_get){
+      try{
+    	  jsonDat = native_get_JSON("?browse=true&type="+type+"&variable="+variable);
+    	  current_type = type;  
+          current_variable = variable;
+    	  element_builder(jsonDat);
+      }
+      catch(e){
+    	  alert("Error parsing native JSON!!");
+      }
+  } else {
    $.ajax({
             data: "browse=true&type="+type+"&variable="+variable+"&rand="+randomNum(),
             success: function(data){
@@ -139,7 +173,8 @@ function browse(type,variable){
                         current_type = type;  
                         current_variable = variable;          
                     }
-      });            
+      }); 
+  }
 }
 
 
@@ -201,10 +236,11 @@ function populate_problems(data){
              } else {            
                 if (value.type == "host"){
                    output = value.host+" Problem "+value.plugin_output;
-                    browse_string = "browse('services','host|"+value.host+"');";
+                    browse_string = fix_string("browse('services','host|"+value.host+"');");
                   } else {
                     output = value.service+" on "+value.host+" "+value.plugin_output;
-                    browse_string = "browse('service','"+value.host+"|"+value.service+"');";
+                    browse_string = fix_string("browse('service','"+value.host+"|"+value.service+"');");
+
                 }
                                
                 out += '<a data-icon="alert" data-iconpos="right" href="#" data-role="button" data-theme="e" class="ajax" onClick="'+browse_string+'" >'+output+'</a>';
@@ -345,18 +381,19 @@ function element_builder(data){
                 $('#'+value.id).html(value.text);
                 break;
              case "browse_button":
-                 browsestring = "browse('"+value.button_type+"','"+value.button_variable+"');";
+                 browsestring = fix_string("browse('"+value.button_type+"','"+value.button_variable+"');");
                  outstring = '<a href="#" onClick="'+browsestring+'" data-role="button">'+value.button_text+'</a>';  
                  $("#"+value.target).append(outstring);
                  break;
              default:
                //default is a list item, with a link to the next browse page, requires 'variable', 'count' and 'text' in data 
-               browsestring = "browse('"+value.type+"','"+value.variable+"');";
-               if (value.image != "" && value.image != null && use_images == true)
+               browsestring = fix_string("browse('"+value.type+"','"+value.variable+"');");
+               //alert(browsestring);
+               if (value.image != "" && value.image != " " && value.image != null && use_images == true)
                   imagestring = "<img class='ui-li-thumb' src='"+value.image+"' />";
                else 
                   imagestring = "";
-               if (value.heading != "" && value.heading != null)
+               if (value.heading != "" && value.heading != " " && value.heading != null)
                   textstring = "<h3>"+value.heading+"</h3><p>"+value.text+"<p>";
                else
                   textstring = "<h3>"+value.text+"</h3>";
@@ -376,8 +413,7 @@ function element_builder(data){
               case "page":
                 $('#'+value.id).page();
                 count_problems(false);                
-                $.mobile.changePage("#"+value.id,"slide",false,true);
-                
+                $.mobile.changePage("#"+value.id,"slide",false,true);     
           }
       });
        //remove any broken graph images
@@ -450,13 +486,20 @@ function jnag_init(){
     }        
     if (data_url == null || data_url == "" || data_url == "http://" || data_url == "https://"){
         $.mobile.changePage("#config_page", "pop", false, false); 
-    } else {               
+    } else {        
+    	if (jNag_platform.phonegap_get)
+    	{
+    		data = native_get_JSON("?settings=true");
+    		cmd_url = data.settings.cmd_url;
+            pnp_url = data.settings.pnp_url;
+            jNag_polling(global_poll_time);
+    	} else {
          $.ajax({
             data: "settings=true&rand="+randomNum(),
             success: function(data){
                         cmd_url = data.settings.cmd_url;
                         pnp_url = data.settings.pnp_url;
-                        jNag_polling(5000);          
+                        jNag_polling(global_poll_time);          
             },
             error: function(x,s,e){                
                 if (e != ""){
@@ -464,6 +507,7 @@ function jnag_init(){
                 }              
             }
          });
+    	}
       } 
     }
 
@@ -528,6 +572,10 @@ $(document).ready(function(){
     }          
            
     load_config();     
+});
+
+$(document).bind("mobileinit", function(){
+	  $.mobile.defaultTransition = 'slide';
 });
 
 
