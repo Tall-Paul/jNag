@@ -58,7 +58,14 @@ jQuery.fn.checked = function(){
 
 function native_get_JSON(parameters){
 	result_string = window.webGetter.get(parameters+"&rand="+randomNum());
-	return jQuery.parseJSON(result_string);	  
+	//alert(result_string);
+	try{
+		result = $.parseJSON(result_string);
+	}
+	catch(e){
+		alert(e);
+	}
+	return result;	  
 }
 
 function home_pin(host,service){
@@ -198,7 +205,7 @@ function storage_set(key,value){
 function storage_get(key){
      var val = window.localStorage.getItem(key);
      //("got " + val + " for " + key)
-     if (val == null)
+     if (val == null || val == " ")
         return "";
      if (val == "jNag_bTrue")
         return true;
@@ -356,7 +363,11 @@ function element_builder(data){
                  cmdstring = "cmd('"+value.id+"');";
                  outstring = '<a href="#" onClick="'+cmdstring+'" data-role="button">Commit</a>';  
                  $("#"+value.target).append(outstring);
-                 break;          
+                 break;     
+             case "checkbox":
+            	  outstring = '<div data-role="fieldcontain"><fieldset data-role="controlgroup"><legend>'+value.val+'</legend><input type="checkbox" name="'+value.id+'" id="'+value.id+'"/><label for="'+value.id+'">'+value.text+'</label></fieldset></div>';
+            	  $("#"+value.target).append(outstring);
+            	  break;
              case  "list": //create a listview, requires 'id' in the data
                 outstring = '<ul data-role="listview" data-inset="true" data-theme="c" id="'+value.id+'"></ul>'; 
                 var this_refresh = {};
@@ -458,7 +469,7 @@ function getUrlVars()
 }
 
 
-function setAjax(){
+function setAjax(){		
    $.ajaxSetup({
          url: data_url,
          username: username,
@@ -470,31 +481,33 @@ function setAjax(){
 
 
 function jnag_init(){
-    setAjax();
+	//alert("jnag_init");
     if (data_theme != "default"){
-       //$('div').live('pagebeforeshow',function(event, ui){          
-       //   $(this).attr("data-theme",data_theme);          
-       //});
+       //alert("setting theme");	
        $('div[data-role="page"]').attr("data-theme",data_theme).each(function(){
           if ($(this).hasClass('ui-page')) {
             $(this).page('destroy');
             $(this).page()         
           }
        });
-       
-       
     }        
-    if (data_url == null || data_url == "" || data_url == "http://" || data_url == "https://"){
-        $.mobile.changePage("#config_page", "pop", false, false); 
-    } else {        
+    if (data_url == null || data_url == "" || data_url == " " || data_url == "http://" || data_url == "https://"){
+        open_config();
+    } else {      
+    	setAjax();
     	if (jNag_platform.phonegap_get)
     	{
     		data = native_get_JSON("?settings=true");
-    		cmd_url = data.settings.cmd_url;
-            pnp_url = data.settings.pnp_url;
-            jNag_polling(global_poll_time);
+    		if (data != null){
+    			cmd_url = data.settings.cmd_url;
+            	pnp_url = data.settings.pnp_url;
+            	jNag_polling(global_poll_time);
+    		} else {
+    			alert("Unable to connect to server, check your settings");
+    			open_config();
+    		}
     	} else {
-         $.ajax({
+    	 $.ajax({
             data: "settings=true&rand="+randomNum(),
             success: function(data){
                         cmd_url = data.settings.cmd_url;
@@ -503,7 +516,9 @@ function jnag_init(){
             },
             error: function(x,s,e){                
                 if (e != ""){
-                  alert("Error: ["+e+"] url: [" + data_url + "]");
+                  //alert("Error: ["+e+"] url: [" + data_url + "]");
+                  alert("unable to connect to server, check your settings");
+                  load_config();
                 }              
             }
          });
@@ -517,12 +532,16 @@ function open_config(){
 }
 
 function load_config(){  
+	//alert("in load_config");
     data_url = storage_get("data_url");    
     username = storage_get("username");
-    password = storage_get("password");                
+    password = storage_get("password");
+    data_url = $.trim(data_url);
+    username = $.trim(username);
+    password = $.trim(password);
     use_images = storage_get("use_images");  
     data_theme = storage_get("data_theme");    
-    if (data_theme == "" || data_theme == " ")
+    if (data_theme == "" || data_theme == " " || data_theme == null)
         data_theme = "default";          
     if (data_url.indexOf("http") == -1)
     {
@@ -540,6 +559,7 @@ function load_config(){
     $('#password').val(password);   
     $('#use_images').attr('checked', use_images);
     $('#data_theme_select').val(data_theme);
+    //alert("calling jnag_init");
     jnag_init();
 }
 
@@ -570,12 +590,11 @@ $(document).ready(function(){
       showAd("main_ads");      
       showAd("problem_ads");
     }          
-           
-    load_config();     
+    load_config();    
 });
 
-$(document).bind("mobileinit", function(){
-	  $.mobile.defaultTransition = 'slide';
-});
+//$(document).bind("mobileinit", function(){
+//	  $.mobile.defaultTransition = 'slide';
+//});
 
 

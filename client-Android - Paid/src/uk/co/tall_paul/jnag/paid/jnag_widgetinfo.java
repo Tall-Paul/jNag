@@ -91,9 +91,13 @@ public class jnag_widgetinfo extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {        	
 	// To prevent any ANR timeouts, we perform the update in a service
-    Log.w("jNag","Attempting service start");
-     context.startService(new Intent(context, UpdateService.class));
     
+    settingsClass sc = new settingsClass(context);
+    String service_enabled = sc.getSetting("Service_enabled");
+    if (service_enabled == "1"){
+    	Log.w("jNag","Attempting service start");
+    	context.startService(new Intent(context, UpdateService.class));
+      }
     }
 	
 	private ContextWrapper getApplicationContext() {
@@ -153,6 +157,7 @@ public class jnag_widgetinfo extends AppWidgetProvider {
             	} else {
             		c = (HttpURLConnection) new URL(data_url + "?count_problems=true").openConnection();
             	}
+    			c.setConnectTimeout(1500);
     			InputStream in = new BufferedInputStream(c.getInputStream());		    
     		    BufferedReader r = new BufferedReader(new InputStreamReader(in));
     			StringBuilder total = new StringBuilder();

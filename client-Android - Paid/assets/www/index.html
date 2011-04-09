@@ -23,15 +23,17 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>jNag</title>              
-         <script src="includes/jquery_mobile/jquery.js"></script>   
+         <script src="includes/jquery_mobile/jquery.js"></script>  
+         <script src="includes/jquery_mobile/jquery_mobile.js"></script>  
          <script src="includes/anchor.js"></script>   
-         <script src="includes/platform.js"></script>    
-    	 <script src="includes/jNag.js"></script>
-         <script src="includes/jquery_mobile/jquery_mobile.js"></script>       
+         <script src="includes/platform.js"></script>
+         <script src="includes/jNag.js"></script> 
+            
+    	 
+          <link rel="stylesheet" href="includes/jquery_mobile/jquery_mobile.css" />   
     </head>
     <body>
            
-    <link rel="stylesheet" href="includes/jquery_mobile/jquery_mobile.css" /> 
         
     <div id="script_target"></div>     
     <div data-role="page" id="browse_top">
@@ -53,9 +55,7 @@
                 <a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right main-button">Options</a> 
                 <a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right main-button">refresh</a>                
         </div>
- 
-            
-    </div> <!--main page--->
+    </div>
                 
     <div data-role="page" id="problems_page">
         <div data-role="header" data-position="fixed">
@@ -67,7 +67,7 @@
             </div>                                                           
         </div>   
         <div data-role="footer" data-position="fixed" class="footer"> 
-         <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a></div>
+         <a href="#" onClick="home();" data-transition="pop" data-icon="grid" class="ui-btn-right">Home</a><a href="#config_page" data-rel="dialog" data-transition="pop" data-icon="gear" class="ui-btn-right">Options</a><a href="#" data-transition="pop" data-icon="refresh" onClick="refresh_page();" class="ui-btn-right">refresh</a>
          </div>                
     </div>
     
@@ -105,7 +105,6 @@
 		                    <option value="c" data-theme="C">White</option>
 		                    <option value="d" data-theme="D">Grey</option>
 		                    <option value="e" data-theme="E">Yellow</option>
-		                    <option value="w" data-theme="W">Glass</option>
 	                  </select>
               </div>     
               <a href='#' data-role='button' onClick="save_config();">Save</a>

@@ -29,13 +29,17 @@ public class App extends DroidGap {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	try{
         super.onCreate(savedInstanceState);
         super.init();        
         sc = new settingsClass(this.getApplicationContext());  
         wg = new webGetter(this.getApplicationContext());
         appView.addJavascriptInterface(sc,"phoneGapSettings");
         appView.addJavascriptInterface(wg, "webGetter");
-        super.loadUrl("file:///android_asset/www/index.html");
+        //set a ridiculously long timeout here, just in case
+        super.loadUrlTimeoutValue = 120000;
+        super.setIntegerProperty("splashscreen", R.drawable.splash);
+        super.loadUrl("file:///android_asset/www/index.html",2000);
         String service_enabled = sc.getSetting("Service_enabled");
         if (service_enabled == "1"){
         	//attempt service start
@@ -52,7 +56,12 @@ public class App extends DroidGap {
       	  	// add 5 minutes to the calendar object
       	  	cal.add(Calendar.MINUTE, 15);
       	  	mgr.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),900000,pi);
+        } else {
+        	Log.d("jNag","service is not enabled");
         }
+    	} catch(Exception e){
+    		
+    	}
     }
     
     

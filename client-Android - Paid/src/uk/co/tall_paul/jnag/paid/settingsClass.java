@@ -1,6 +1,7 @@
 package uk.co.tall_paul.jnag.paid;
 
 import android.app.Activity;
+import android.util.Log;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class settingsClass {
     public String getSetting(String key){
     	Log.w("jNag", "Setting " + key + " requested");
     	SharedPreferences settings = settingsContext.getSharedPreferences("phoneGap", 0);
+    	Log.w("jNag","returning: "+settings.getString(key,""));
     	return settings.getString(key,"");
     }
 }

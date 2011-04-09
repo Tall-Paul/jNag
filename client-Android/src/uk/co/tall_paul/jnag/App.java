@@ -13,7 +13,9 @@ public class App extends DroidGap {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.loadUrl("file:///android_asset/www/index.html");        
+        super.loadUrlTimeoutValue = 120000;
+        super.setIntegerProperty("splashscreen", R.drawable.splash);
+        super.loadUrl("file:///android_asset/www/index.html",2000);       
     }
     
     @Override
