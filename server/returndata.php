@@ -113,10 +113,6 @@ END OF SETTINGS
        echo "</table>";    
     }
     
-    if (isset($_GET['test'])){
-    	
-    	
-    }
     
      if (isset($_GET['get_pinned'])){
         $browse_items[] = array("type"=>"list","target"=>"pin_target","id"=>"pinned_list");        
@@ -124,7 +120,8 @@ END OF SETTINGS
             foreach($pinned_items as $pinned_item){
                 $dat = explode("|",$pinned_item);
                 $host = $dat[0];
-                $service_name = $dat[1];
+                if (count(dat) > 1)
+                	$service_name = $dat[1];
                 if ($host != "" && $service_name != ""){
                 $filter = $filter = "\nFilter: host_name = ".$host."\nFilter: display_name = ".$service_name;
                 $data = json_decode(run_query("GET services\nColumns: display_name host_name plugin_output state host_address host_comments custom_variable_names custom_variable_values host_address host_last_check host_last_time_down host_last_time_unreachable host_last_time_up $filter $authuser\nOutputFormat: json\n\n"));
@@ -388,6 +385,9 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"checkbox","id"=>"sticky_ack","text"=>"Sticky acknowledgement?","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"checkbox","id"=>"send_notification","text"=>"Send Notification?","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"checkbox","id"=>"persistent","text"=>"Persistent?","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
         
@@ -401,6 +401,9 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>" ");
+                        $browse_items[] = array("type"=>"checkbox","id"=>"sticky_ack","text"=>"Sticky acknowledgement?","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"checkbox","id"=>"send_notification","text"=>"Send Notification?","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"checkbox","id"=>"persistent","text"=>"Persistent?","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
         
@@ -413,6 +416,9 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"input_hidden","id"=>"host","val"=>$host_name,"target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>" ");
+                        $browse_items[] = array("type"=>"checkbox","id"=>"sticky_ack","text"=>"Sticky acknowledgement?","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"checkbox","id"=>"send_notification","text"=>"Send Notification?","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"checkbox","id"=>"persistent","text"=>"Persistent?","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
         
@@ -428,6 +434,9 @@ END OF SETTINGS
             $browse_items[] = array("type"=>"input_hidden","id"=>"service","val"=>$service,"target"=>"acknowledge_form");
             $browse_items[] = array("type"=>"input_text","id"=>"com_author","text"=>"Author","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"input_text","id"=>"com_data","text"=>"Comment","target"=>"acknowledge_form","val"=>" ");
+                        $browse_items[] = array("type"=>"checkbox","id"=>"sticky_ack","text"=>"Sticky acknowledgement?","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"checkbox","id"=>"send_notification","text"=>"Send Notification?","target"=>"acknowledge_form","val"=>" ");
+            $browse_items[] = array("type"=>"checkbox","id"=>"persistent","text"=>"Persistent?","target"=>"acknowledge_form","val"=>" ");
             $browse_items[] = array("type"=>"cmd_button","id"=>"acknowledge_form","target"=>"acknowledge_form"); 
         }
                 
