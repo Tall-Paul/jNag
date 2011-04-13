@@ -3,6 +3,7 @@ package uk.co.tall_paul.jnag.paid;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -73,14 +74,66 @@ public class webGetter {
 	         }
 	 }
 
+
 	 
+  //post comment / acknowledgement 
+  public void cmd(String cmd_url,String data){	  
+	  //remove username / password from request if it's there
+	  int start = cmd_url.indexOf("//");
+	  int end = cmd_url.indexOf("@");
+	  if (end > -1){
+		String unwanted = cmd_url.substring(start+2,end+1);
+		cmd_url = cmd_url.replaceAll(unwanted, "");
+		Log.w("jNag",cmd_url);
+	  }
+	  StringBuilder sb = new StringBuilder();
+      sb.append(data);
+	  sc = new settingsClass(context);
 	
-	
-	
-	public String get(String parameters){
+		final String password = sc.getSetting("password");
+		final String username = sc.getSetting("username");
 		
+		Authenticator.setDefault(new Authenticator(){
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username,password.toCharArray());
+			}});
+  HttpURLConnection c;    
+  try {
+		//try to connect using saved credentials and URL
+  	if (cmd_url.toLowerCase().contains("https")){
+  		trustAllHosts();
+  		c = (HttpsURLConnection) new URL(cmd_url).openConnection();
+  		((HttpsURLConnection) c).setHostnameVerifier(DO_NOT_VERIFY);
+  	} else {
+  		c = (HttpURLConnection) new URL(cmd_url).openConnection();
+  	}
+  	c.setRequestMethod( "POST" );
+    c.setDoInput( true );
+    c.setDoOutput( true );
+    OutputStreamWriter wr = new OutputStreamWriter(c.getOutputStream());
+                // this is were we're adding post data to the request
+                wr.write(sb.toString());
+    Log.d("jNag","writing " + sb.toString() + " to " + cmd_url);
+	wr.flush();
+	// Get the response
+    BufferedReader rd = new BufferedReader(new InputStreamReader(c.getInputStream()));
+    String line;
+    while ((line = rd.readLine()) != null) {
+        // Process line...
+    }
+    wr.close();
+    rd.close();
+	wr.close();
+	c.disconnect();
+	} catch (Exception e) {
+		Log.d("jNag","connection error " + e.getLocalizedMessage() + "in webgetter.post");
+	}
+  }
+	
+	
+	
+	public String get(String parameters,int timeout){
 		String returnedVal;
-		
 			//get url, username, password
 				sc = new settingsClass(context);
 				String data_url = sc.getSetting("data_url").trim();
@@ -102,6 +155,8 @@ public class webGetter {
             	} else {
             		c = (HttpURLConnection) new URL(data_url + parameters).openConnection();
             	}
+            	c.setConnectTimeout(timeout);
+            	c.setReadTimeout(timeout);
     			InputStream in = new BufferedInputStream(c.getInputStream(),40960);		    
     		    BufferedReader r = new BufferedReader(new InputStreamReader(in),40960);
     			String line;
@@ -115,7 +170,11 @@ public class webGetter {
     		returnedVal = total.toString().replace("\\\"","");
     		Log.d("jNag","webGetter returning: " + returnedVal.replace("\\", "").trim());
     		return returnedVal.replace("\\", "").trim();
-    	
+	}
+	
+	//this is an overload to provide a default timeout value
+	public String get(String parameters){
+		return get(parameters,60000);
 	}
 	
 }

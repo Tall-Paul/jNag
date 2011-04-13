@@ -41,10 +41,10 @@ public class App extends DroidGap {
         super.setIntegerProperty("splashscreen", R.drawable.splash);
         super.loadUrl("file:///android_asset/www/index.html",2000);
         String service_enabled = sc.getSetting("Service_enabled");
-        if (service_enabled == "1"){
+        if (Integer.parseInt(service_enabled) == 1){
         	//attempt service start
-        	Log.d("jNag","Attempting service start");
-        	this.startService(new Intent(this, UpdateService.class));
+        	//Log.d("jNag","Attempting service start");
+        	//this.startService(new Intent(this, UpdateService.class));
         	//start alarm service
         	Log.d("jNag","Adding Alarm");        
       	  	AlarmManager mgr=(AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
@@ -54,9 +54,14 @@ public class App extends DroidGap {
       	  	Calendar cal = Calendar.getInstance();
       	  	cal.setTimeInMillis(System.currentTimeMillis());
       	  	// add 5 minutes to the calendar object
-      	  	cal.add(Calendar.MINUTE, 15);
+      	  	cal.add(Calendar.SECOND, 10);
       	  	mgr.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),900000,pi);
         } else {
+        	//remove any previously established alarms, just in case!
+        	Intent myintent=new Intent("uk.co.tall_paul.jnag.paid.JNAG_REFRESH");
+			PendingIntent pi=PendingIntent.getBroadcast(this, 0, myintent, 0);
+			AlarmManager mgr=(AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+			mgr.cancel(pi);
         	Log.d("jNag","service is not enabled");
         }
     	} catch(Exception e){

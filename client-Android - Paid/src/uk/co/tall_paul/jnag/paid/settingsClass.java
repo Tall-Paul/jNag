@@ -30,9 +30,9 @@ public class settingsClass {
     }
     
     public String getSetting(String key){
-    	Log.w("jNag", "Setting " + key + " requested");
+    	Log.d("jNag", "Setting " + key + " requested");
     	SharedPreferences settings = settingsContext.getSharedPreferences("phoneGap", 0);
-    	Log.w("jNag","returning: "+settings.getString(key,""));
+    	Log.d("jNag","returning: ["+settings.getString(key,"")+"]");
     	return settings.getString(key,"");
     }
 }

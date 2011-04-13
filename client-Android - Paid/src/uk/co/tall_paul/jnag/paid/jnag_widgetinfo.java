@@ -1,91 +1,29 @@
 package uk.co.tall_paul.jnag.paid;
 
-import java.io.BufferedInputStream;
 
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.Authenticator;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
-import java.net.URL;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Calendar;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 
 public class jnag_widgetinfo extends AppWidgetProvider {
 	
-	// always verify the host - dont check for certificate
-	 final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
-	         public boolean verify(String hostname, SSLSession session) {
-	                 return true;
-	         }
-	 };
-
-	 /**
-	  * Trust every server - dont check for any certificate
-	  */
-	 private static void trustAllHosts() {
-	         // Create a trust manager that does not validate certificate chains
-	         TrustManager[] trustAllCerts = new TrustManager[] { 
-	        		 new X509TrustManager() {
-	        			 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-	                        return new java.security.cert.X509Certificate[] {};
-	        			 }
-	        			 public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-	        			 }
-
-	                 public void checkServerTrusted(X509Certificate[] chain,
-	                                 String authType) throws CertificateException {
-	                 }
-	         } };
-
-	         // Install the all-trusting trust manager
-	         try {
-	                 SSLContext sc = SSLContext.getInstance("TLS");
-	                 sc.init(null, trustAllCerts, new java.security.SecureRandom());
-	                 HttpsURLConnection
-	                                 .setDefaultSSLSocketFactory(sc.getSocketFactory());
-	         } catch (Exception e) {
-	                 e.printStackTrace();
-	         }
-	 }
+		
 	
 	
 	@Override
@@ -94,16 +32,10 @@ public class jnag_widgetinfo extends AppWidgetProvider {
     
     settingsClass sc = new settingsClass(context);
     String service_enabled = sc.getSetting("Service_enabled");
-    if (service_enabled == "1"){
-    	Log.w("jNag","Attempting service start");
     	context.startService(new Intent(context, UpdateService.class));
-      }
     }
 	
-	private ContextWrapper getApplicationContext() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	
 	
 
@@ -134,39 +66,14 @@ public class jnag_widgetinfo extends AppWidgetProvider {
         
         public RemoteViews buildUpdate(Context context) {
             //get url, username, password
-            sc = new settingsClass(context);
-            String data_url = sc.getSetting("data_url");
-            final String password = sc.getSetting("password");
-            final String username = sc.getSetting("username");
-            //Read problem count
-            Authenticator.setDefault(new Authenticator(){
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username,password.toCharArray());
-                }});
-            HttpURLConnection c;
-            //we use -1 as an error condition here
             String returnedVal = "{\"problem_count\":\"-1\"}";
             int problem_count = -1;
             int use_drawable = R.drawable.unknown;
+            sc = new settingsClass(context);
     		try {
-    			//try to connect using saved credentials and URL
-    			if (data_url.toLowerCase().contains("https")){
-            		trustAllHosts();
-            		c = (HttpsURLConnection) new URL(data_url + "?count_problems=true").openConnection();
-            		((HttpsURLConnection) c).setHostnameVerifier(DO_NOT_VERIFY);
-            	} else {
-            		c = (HttpURLConnection) new URL(data_url + "?count_problems=true").openConnection();
-            	}
-    			c.setConnectTimeout(1500);
-    			InputStream in = new BufferedInputStream(c.getInputStream());		    
-    		    BufferedReader r = new BufferedReader(new InputStreamReader(in));
-    			StringBuilder total = new StringBuilder();
-    			String line;
-    			while ((line = r.readLine()) != null) {
-    			    total.append(line);
-    			}
-    			returnedVal = total.toString();
-    			c.disconnect();
+    			webGetter wg = new webGetter(context);
+    			returnedVal = wg.get("?count_problems=true");
+    			Log.d("jNag","returnedVal is" + returnedVal);
     		} catch (Exception e) {
     			Log.d("jNag","connection error " + e.getLocalizedMessage() );
     		}		
@@ -176,6 +83,7 @@ public class jnag_widgetinfo extends AppWidgetProvider {
     			json = new JSONObject(returnedVal);
     			String problem_count_string = json.getString("problem_count");
     			problem_count = Integer.parseInt(problem_count_string);
+    			Log.d("jNag","Problem count is " + problem_count);
     		} catch (JSONException e) {
     			Log.d("jNag","JSON ERROR");
     		}
@@ -185,8 +93,10 @@ public class jnag_widgetinfo extends AppWidgetProvider {
     		} else {
     			if (problem_count > 0){
     				//fire notification
+    				Log.d("jNag","problem count > 0");
     				String enabled = sc.getSetting("Notifications_enabled");
-    				if (enabled == "1"){
+    				Log.d("jNag","Notifications enabled returned: " + enabled);
+    				if (Integer.parseInt(enabled) == 1){
     					Log.d("jNag","Notifying");
     					String ns = Context.NOTIFICATION_SERVICE;
     					NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
@@ -204,12 +114,17 @@ public class jnag_widgetinfo extends AppWidgetProvider {
     					notification.defaults |= Notification.DEFAULT_VIBRATE;
     					notification.setLatestEventInfo(this.getApplicationContext(), contentTitle, contentText, contentIntent);
     					mNotificationManager.notify(1, notification);    					
+    				} else {
+    					Log.d("jNag","notifications are disabled");
     				}
+    				Log.d("jNag","using problem icon");
     				use_drawable = R.drawable.problem;
     			} else {
+    				Log.d("jNag","using unknown icon");
     				use_drawable = R.drawable.unknown;
     			}
     		}
+    		Log.d("jNag","doing views stuff");
     		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.jnag_widgetlayout);
     		Intent intent = new Intent(context, App.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);            
