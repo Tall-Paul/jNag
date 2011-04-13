@@ -260,7 +260,11 @@ function populate_problems(data){
 
 
 function cmd(form_id){
-    $.post(cmd_url, $("#"+form_id).serialize());
+	if (jNag_platform.phonegap_get == true){
+		window.webGetter.cmd(cmd_url,$("#"+form_id).serialize());
+	} else {
+		$.post(cmd_url, $("#"+form_id).serialize());
+	}
     $(".ui-dialog").dialog('close');
 }
 
@@ -344,7 +348,7 @@ function element_builder(data){
                  break;                          
              case "pnp":
                 image_width = window.innerWidth * 0.90;
-                outstring = "<div><img class='pnp' src='"+pnp_url+"?host="+value.host+"&srv="+value.service+"&source=1&view="+value.pnp_view+"&end="+now()+"&display=image' width='"+image_width+"'/></div>";
+                outstring = "<div><img class='pnp' src='"+pnp_url+"?host="+value.host+"&srv="+value.service+"&view="+value.pnp_view+"&display=image' width='"+image_width+"'/></div>";
                 $("#"+value.target).append(outstring);
                 break;
              case "form": //create a form
@@ -497,7 +501,7 @@ function jnag_init(){
     	setAjax();
     	if (jNag_platform.phonegap_get)
     	{
-    		data = native_get_JSON("?settings=true");
+    		data = native_get_JSON("?settings=true",10000);
     		if (data != null){
     			cmd_url = data.settings.cmd_url;
             	pnp_url = data.settings.pnp_url;
