@@ -417,7 +417,7 @@ function element_builder(data){
                   textstring = "<h3>"+value.heading+"</h3><p>"+value.text+"<p>";
                else
                   textstring = "<h3>"+value.text+"</h3>";
-               outstring = '<li'+colour+'>'+imagestring+'<a href="#" onClick="'+browsestring+'">'+textstring+'</a>'+count+'</li>';
+               outstring = '<li'+colour+'><a href="#" onClick="'+browsestring+'">'+imagestring+textstring+'</a>'+count+'</li>';
                $("#"+value.target).append(outstring);         
         }                                        
       });       
