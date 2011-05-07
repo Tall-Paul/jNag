@@ -56,7 +56,7 @@ public class jnag_widgetinfo extends AppWidgetProvider {
             manager.updateAppWidget(thisWidget, updateViews);
             Log.d("jNag", "widget updated");
             Log.d("jNag", "Stopping service");
-            //stopSelf();
+            stopSelf();
         }
 
         @Override

@@ -32,6 +32,7 @@ var current_variable = "";
 var use_images = true;
 var home_pinned = "";
 var data_theme = "default";
+var global_request_timeout = 10000;
 
 var admob_vars = {
         pubid: 'a14d4fbbf29feae', // publisher id
@@ -56,8 +57,11 @@ jQuery.fn.checked = function(){
          return jQuery(this).is(':checked');
 }
 
-function native_get_JSON(parameters){
-	result_string = window.webGetter.get(parameters+"&rand="+randomNum());
+function native_get_JSON(parameters,timeout){
+	if (typeof timeout == 'undefined' )
+		result_string = window.webGetter.get(parameters+"&rand="+randomNum());
+	else
+		result_string = window.webGetter.get(parameters+"&rand="+randomNum(),timeout);
 	//alert(result_string);
 	try{
 		result = $.parseJSON(result_string);
@@ -123,7 +127,8 @@ function count_problems(repeat){
             data: "count_problems=true&rand="+randomNum(),
             success: function(data){
                         counted_problems(data);                                  
-            }
+            },
+            error: function(x,s,e){ }
       });
 	}  
       get_pinned();
@@ -474,14 +479,44 @@ function getUrlVars()
 
 
 function setAjax(){		
-   $.ajaxSetup({
-         url: data_url,
-         username: username,
-         password: password,
-         type: "GET",
-         datatype: "json"
-    });
-}
+	   $.ajaxSetup({
+	         url: data_url,
+	         username: username,
+	         password: password,
+	         type: "GET",
+	         datatype: "json",
+	         
+	         timeout: global_request_timeout, 
+	         error:function(x,e){
+	        	//in case it is shown, hide the page loading dialog
+	            $.mobile.pageLoading(true);
+	        	if(e=='parsererror'){
+	        		showFadeNotification('Error. Parsing JSON request failed.');
+				}else if(e=='timeout'){
+					showFadeNotification('Request time out.');
+				}else if(x.status==0){
+					showFadeNotification('You are offline! Please check your network.');
+	 			}else if(x.status==404){
+	 				showFadeNotification('Requested URL not found.');
+	 			}else if(x.status==500){
+	 				showFadeNotification('Internal server error.');
+	 			}else {
+	 				showFadeNotification('Unknown error. '+x.responseText);
+	 			}
+	 		}
+	    });
+	}
+
+
+	function showFadeNotification(message){
+		$("<div class='ui-loader ui-overlay-shadow ui-body-e ui-corner-all'><h1>" + message + "</h1></div>")
+		.css({ "display": "block", "opacity": 0.96, "top": $(window).scrollTop() + 100 })
+		.appendTo( $.mobile.pageContainer )
+		.delay( 800 )
+		.fadeOut( 400, function(){
+			$(this).remove();
+		});
+	}
 
 
 function jnag_init(){
@@ -501,7 +536,7 @@ function jnag_init(){
     	setAjax();
     	if (jNag_platform.phonegap_get)
     	{
-    		data = native_get_JSON("?settings=true",10000);
+    		data = native_get_JSON("?settings=true",5000);
     		if (data != null){
     			cmd_url = data.settings.cmd_url;
             	pnp_url = data.settings.pnp_url;
@@ -522,7 +557,7 @@ function jnag_init(){
                 if (e != ""){
                   //alert("Error: ["+e+"] url: [" + data_url + "]");
                   alert("unable to connect to server, check your settings");
-                  load_config();
+                  open_config();
                 }              
             }
          });

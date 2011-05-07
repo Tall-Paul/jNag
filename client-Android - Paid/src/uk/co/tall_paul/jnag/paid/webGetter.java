@@ -140,6 +140,11 @@ public class webGetter {
 				final String password = sc.getSetting("password");
 				final String username = sc.getSetting("username");
 				Log.d("jNag","Get: " + data_url + parameters.replace(" ", "").trim());
+				if (data_url == "" || data_url == " " || data_url == null)
+				{
+					Log.d("jNag","data_url not set, returning nowt");
+					return "";
+				}
         	Authenticator.setDefault(new Authenticator(){
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username,password.toCharArray());

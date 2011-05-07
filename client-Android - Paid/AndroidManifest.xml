@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="uk.co.tall_paul.jnag.paid" android:versionCode="083" android:versionName="0.83">
+      package="uk.co.tall_paul.jnag.paid" android:versionCode="086" android:versionName="0.86">
       <supports-screens
 android:largeScreens="true"
 android:normalScreens="true"
